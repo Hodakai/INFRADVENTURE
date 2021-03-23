@@ -26,15 +26,6 @@ public:
 		window.draw(text);
 	}
 
-	struct DataPrint
-	{
-		Font font;
-		RenderWindow& window;
-		string str;
-		float x;
-		float y;
-	};
-
 	typedef struct DataPrint DataPrint;
 
 private:
@@ -49,37 +40,37 @@ public:
 
 		Display Welcome;
 		string PWelcome = "Welcome to...";
-		Welcome.Print(font, 20, window, PWelcome, 800, 500, Color::Black);
+		Welcome.Print(font, 20, window, PWelcome, 800, 500, Color::White);
 
 		window.display();
 
 		Sleep(2000);
 
-		window.clear(Color::White);
+		window.clear();
 
 		Display Title;
 		string PTitle = "INFRADVENTURE";
-		Title.Print(font, 30, window, PTitle, 800, 500, Color::Black);
+		Title.Print(font, 30, window, PTitle, 800, 500, Color::White);
 
 	}
 
 	void Win(Font font, RenderWindow& window) {
 		
-		window.clear(Color::White);
+		window.clear();
 
 		Display Win;
 		string PWin = "Vous avez gagné face au premier boss !!! Bravo !!!";
-		Win.Print(font, 20, window, PWin, 800, 500, Color::Black);
+		Win.Print(font, 20, window, PWin, 800, 500, Color::White);
 
 		window.display();
 
 		Sleep(2000);
 
-		window.clear(Color::White);
+		window.clear();
 
 		Display End;
 		string PEnd = "Merci d'avoir joué !!!";
-		End.Print(font, 20, window, PEnd, 800, 500, Color::Black);
+		End.Print(font, 20, window, PEnd, 800, 500, Color::White);
 
 		window.display();
 
@@ -116,12 +107,14 @@ Player::Player(int money, int health, string name) {
 class Weapon
 {
 public:
-	int dmgEvryClic; //Le nombre de dégats infligés par clic
+	int dmgEvryClic; // Le nombre de dégats infligés par clic
 	string name;
-	int cost; //Le prix de l'arme en question
+	int cost; // Le prix de l'arme en question
 	float crit; // Variable qui va définir le pourcentage de coup critique infigés à l'ennemi (entre 0 et 1)
+	string img;
 
-	Weapon(int dmg, string name, int cost, float crit);
+	Weapon(int dmg, string name, int cost, float crit, string img);
+	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, Player player, float x, float y, float Sx, float Sy, Sprite boss);
 	~Weapon();
 
 private:
@@ -130,11 +123,29 @@ private:
 };
 
 //Constructeur
-Weapon::Weapon(int dmg, string name, int cost, float crit) {
+Weapon::Weapon(int dmg, string name, int cost, float crit, string img) {
 	this->dmgEvryClic = dmg;
 	this->name = name;
 	this->cost = cost;
 	this->crit = crit;
+	this->img = img;
+}
+
+void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWeapon, Player player, float x, float y, float Sx, float Sy, Sprite weaponSprite) {
+	sf::Texture textureWeapon;
+
+	if (!textureWeapon.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
+
+		cout << "Texture : " << img << "loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+		system("pause");
+
+	}
+
+	weaponSprite.setTexture(textureWeapon);
+	weaponSprite.setPosition(x, y);
+	weaponSprite.scale(Sx, Sy);
+
+	window.draw(weaponSprite);
 }
 
 Weapon::~Weapon()
@@ -191,10 +202,10 @@ void Monster::CreateSprite(RenderWindow& window, Font font, string img, int nbBo
 // J'ai fait une fonction pour le message de resize de la window ;) 
 void resized(RenderWindow& window, Font font) {
 
-	window.clear(Color::White);
+	window.clear();
 	Display warningResize;
-	string WarnRstr = "Attention ! Vous avez redimentionne la fenetre, cela peu t affecter l'affichage de certains elements !";
-	warningResize.Print(font, 20, window, WarnRstr, 0, 275, Color::Black);
+	string WarnRstr = "Attention ! Vous avez redimentionne la fenetre, cela peut affecter l'affichage de certains elements !";
+	warningResize.Print(font, 20, window, WarnRstr, 500, 500, Color::White);
 	window.display();
 	Sleep(3000);
 
@@ -208,11 +219,12 @@ class HUD : public Display // Classe dérivée de Display qui permet d'afficher le
 {
 public:
 
-	void InitHUD(Player player, Monster monster, RenderWindow& window, Font font) {
+	void InitHUD(Player player, Monster monster, Weapon weapon, RenderWindow& window, Font font) {
 		PlayerHealth(player, window, font);
 		PlayerGold(player, window, font);
 		MonsterHealth(monster, window, font);
 		MonsterName(monster, window, font);
+		WeaponName(weapon, window, font);
 	}
 
 	void PlayerHealth(Player player, RenderWindow& window, Font font) {
@@ -247,6 +259,14 @@ public:
 		NameMonster.Print(font, 75, window, NMonster, 800, 800, Color::Red);
 	}
 
+	void WeaponName(Weapon weapon, RenderWindow& window, Font font) {
+		Display NameMonster;
+
+		string NWeapon;
+		NWeapon = weapon.name;
+		NameMonster.Print(font, 25, window, NWeapon, 1640, 990, Color::White);
+	}
+
 private:
 
 };
@@ -256,12 +276,13 @@ int main()
 	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
 		
 	Player player(100, 100, "Hodaka");
-	Weapon weaponLvl1(1, "Epee en carton", 0, 0);
+	Weapon weapon(1, "Epee en carton", 0, 0, "Epée en carton.png");
 	Monster monster(100, "Camrond", 'A');
 	 
-	Sprite boss;
+	Sprite bossSprite;
+	Sprite weaponSprite;
 
-	window.clear(Color::White);
+	window.clear();
 
 	Font font;
 	font.loadFromFile("arial.ttf");
@@ -270,7 +291,7 @@ int main()
 
 	window.display();
 
-	Sleep(5000);
+	Sleep(2000);
 
 	while (window.isOpen()) {
 
@@ -290,12 +311,14 @@ int main()
 
 			}
 
-			window.clear(Color::White);
+			window.clear();
+
+			weapon.CreateSprite(window, font, "Epée en carton.png", 1, player, 1350, 700, 0.75, 0.75, weaponSprite);
 			
 			HUD HUD;
-			HUD.InitHUD(player, monster, window, font);
+			HUD.InitHUD(player, monster, weapon, window, font);
 
-			monster.CreateSprite(window, font, "1stBOSS.png", 1, player, 675, 200, 2, 2, boss); //L'appel de la fonction pour créer le sprite du boss 1
+			monster.CreateSprite(window, font, "1stBOSS.png", 1, player, 675, 200, 2, 2, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
@@ -309,7 +332,7 @@ int main()
 			}*/
 
 			if (event.type == Event::MouseButtonPressed) {
-				monster.health -= weaponLvl1.dmgEvryClic;
+				monster.health -= weapon.dmgEvryClic;
 				player.money++;
 			}
 
