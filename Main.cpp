@@ -4,6 +4,7 @@
 #include <iostream>
 #include <time.h>
 #include <Windows.h>
+#include <algorithm>
 
 using namespace std;
 using namespace sf;
@@ -104,55 +105,6 @@ Player::Player(int money, int health, string name) {
 	this->name = name;
 }
 
-class Weapon
-{
-public:
-	int dmgEvryClic; // Le nombre de dégats infligés par clic
-	string name;
-	int cost; // Le prix de l'arme en question
-	float crit; // Variable qui va définir le pourcentage de coup critique infigés à l'ennemi (entre 0 et 1)
-	string img;
-
-	Weapon(int dmg, string name, int cost, float crit, string img);
-	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, Player player, float x, float y, float Sx, float Sy, Sprite boss);
-	~Weapon();
-
-private:
-	
-
-};
-
-//Constructeur
-Weapon::Weapon(int dmg, string name, int cost, float crit, string img) {
-	this->dmgEvryClic = dmg;
-	this->name = name;
-	this->cost = cost;
-	this->crit = crit;
-	this->img = img;
-}
-
-void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWeapon, Player player, float x, float y, float Sx, float Sy, Sprite weaponSprite) {
-	sf::Texture textureWeapon;
-
-	if (!textureWeapon.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
-
-		cout << "Texture : " << img << "loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
-		system("pause");
-
-	}
-
-	weaponSprite.setTexture(textureWeapon);
-	weaponSprite.setPosition(x, y);
-	weaponSprite.scale(Sx, Sy);
-
-	window.draw(weaponSprite);
-}
-
-Weapon::~Weapon()
-{
-	
-}
-
 class Monster
 {
 public:
@@ -197,6 +149,70 @@ void Monster::CreateSprite(RenderWindow& window, Font font, string img, int nbBo
 	boss.scale(Sx, Sy);
 
 	window.draw(boss);
+}
+
+class Weapon
+{
+public:
+	int dmgEvryClic; // Le nombre de dégats infligés par clic
+	string name;
+	int cost; // Le prix de l'arme en question
+	float crit; // Variable qui va définir le pourcentage de coup critique infigés à l'ennemi (entre 0 et 1)
+	string img;
+
+	Weapon(int dmg, string name, int cost, float crit, string img);
+	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, Player player, float x, float y, float Sx, float Sy, Sprite boss);
+	void CriticalAtk(Weapon weapon, Monster monster, RenderWindow& window, Font font);
+	~Weapon();
+
+private:
+	
+
+};
+
+//Constructeur
+Weapon::Weapon(int dmg, string name, int cost, float crit, string img) {
+	this->dmgEvryClic = dmg;
+	this->name = name;
+	this->cost = cost;
+	this->crit = crit;
+	this->img = img;
+}
+
+void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWeapon, Player player, float x, float y, float Sx, float Sy, Sprite weaponSprite) {
+	sf::Texture textureWeapon;
+
+	if (!textureWeapon.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
+
+		cout << "Texture : " << img << "loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+		system("pause");
+
+	}
+
+	weaponSprite.setTexture(textureWeapon);
+	weaponSprite.setPosition(x, y);
+	weaponSprite.scale(Sx, Sy);
+
+	window.draw(weaponSprite);
+}
+
+// Fonction encore en cours de construction, PAS FONCTIONELLE pour l'instant
+void Weapon::CriticalAtk(Weapon weapon, Monster monster, RenderWindow& window, Font font) {
+	srand(time(NULL));
+	int probaCrit = rand() % 100; // création de la probabilité d'infliger un coup critique
+	if (weapon.crit * 100 > probaCrit) {
+		monster.health -= weapon.dmgEvryClic * 2; // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
+		Display test;
+
+		string test2;
+		test2 = "Proba crit : " + to_string(probaCrit);
+		test.Print(font, 30, window, test2, 100, 100, Color::Blue);
+	}
+}
+
+Weapon::~Weapon()
+{
+	
 }
 
 // J'ai fait une fonction pour le message de resize de la window ;) 
@@ -276,7 +292,7 @@ int main()
 	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
 		
 	Player player(100, 100, "Hodaka");
-	Weapon weapon(1, "Epee en carton", 0, 0, "Epée en carton.png");
+	Weapon weapon(1, "Epee en carton", 0, 1, "Epée en carton.png");
 	Monster monster(100, "Camrond", 'A');
 	 
 	Sprite bossSprite;
@@ -333,7 +349,7 @@ int main()
 
 			if (event.type == Event::MouseButtonPressed) {
 				monster.health -= weapon.dmgEvryClic;
-				player.money++;
+				weapon.CriticalAtk(weapon, monster, window, font);
 			}
 
 			if (monster.health == 0) {
