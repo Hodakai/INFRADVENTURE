@@ -162,7 +162,7 @@ public:
 
 	Weapon(int dmg, string name, int cost, float crit, string img);
 	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, Player player, float x, float y, float Sx, float Sy, Sprite boss);
-	void CriticalAtk(Player player, Weapon weapon, Monster& monster, RenderWindow& window, Font font);
+	void Atk(Player player, Weapon weapon, Monster& monster, RenderWindow& window, Font font);
 	~Weapon();
 
 private:
@@ -196,7 +196,7 @@ void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWea
 	window.draw(weaponSprite);
 }
 
-void Weapon::CriticalAtk(Player player, Weapon weapon, Monster& monster, RenderWindow& window, Font font) {
+void Weapon::Atk(Player player, Weapon weapon, Monster& monster, RenderWindow& window, Font font) {
 	int probaCrit = rand() % 100; // création de la probabilité d'infliger un coup critique
 	if (weapon.crit*100 > probaCrit) {
 		monster.health -= weapon.dmgEvryClic * 2; // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
@@ -349,7 +349,7 @@ int main()
 			if (event.type == Event::MouseButtonPressed) {
 				//monster.health -= weapon.dmgEvryClic;
 				Monster& monsterAdress = monster;
-				weapon.CriticalAtk(player, weapon, monsterAdress, window, font);
+				weapon.Atk(player, weapon, monsterAdress, window, font);
 			}
 
 			window.display();
