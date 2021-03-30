@@ -162,7 +162,7 @@ public:
 
 	Weapon(int dmg, string name, int cost, float crit, string img);
 	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, Player player, float x, float y, float Sx, float Sy, Sprite boss);
-	void CriticalAtk(Weapon weapon, Monster monster, RenderWindow& window, Font font);
+	void CriticalAtk(Player player, Weapon weapon, Monster& monster, RenderWindow& window, Font font);
 	~Weapon();
 
 private:
@@ -196,17 +196,16 @@ void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWea
 	window.draw(weaponSprite);
 }
 
-// Fonction encore en cours de construction, PAS FONCTIONELLE pour l'instant
-void Weapon::CriticalAtk(Weapon weapon, Monster monster, RenderWindow& window, Font font) {
-	srand(time(NULL));
+void Weapon::CriticalAtk(Player player, Weapon weapon, Monster& monster, RenderWindow& window, Font font) {
 	int probaCrit = rand() % 100; // création de la probabilité d'infliger un coup critique
-	if (weapon.crit * 100 > probaCrit) {
+	if (weapon.crit*100 > probaCrit) {
 		monster.health -= weapon.dmgEvryClic * 2; // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
-		Display test;
-
-		string test2;
-		test2 = "Proba crit : " + to_string(probaCrit);
-		test.Print(font, 30, window, test2, 100, 100, Color::Blue);
+	}
+	else {
+		monster.health -= weapon.dmgEvryClic;
+	}
+	if (monster.health == 0) {
+		player.Win(font, window);
 	}
 }
 
@@ -292,7 +291,7 @@ int main()
 	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
 		
 	Player player(100, 100, "Hodaka");
-	Weapon weapon(1, "Epee en carton", 0, 1, "Epée en carton.png");
+	Weapon weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
 	Monster monster(100, "Camrond", 'A');
 	 
 	Sprite bossSprite;
@@ -348,12 +347,9 @@ int main()
 			}*/
 
 			if (event.type == Event::MouseButtonPressed) {
-				monster.health -= weapon.dmgEvryClic;
-				weapon.CriticalAtk(weapon, monster, window, font);
-			}
-
-			if (monster.health == 0) {
-				player.Win(font, window);
+				//monster.health -= weapon.dmgEvryClic;
+				Monster& monsterAdress = monster;
+				weapon.CriticalAtk(player, weapon, monsterAdress, window, font);
 			}
 
 			window.display();
