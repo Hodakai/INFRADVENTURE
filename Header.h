@@ -203,7 +203,7 @@ public:
 
 		Display Welcome;
 		string PWelcome = "Welcome to...";
-		Welcome.Print(font, 20, window, PWelcome, 800, 500, Color::White);
+		Welcome.Print(font, 75, window, PWelcome, 700, 450, Color::White);
 
 		window.display();
 
@@ -213,7 +213,7 @@ public:
 
 		Display Title;
 		string PTitle = "INFRADVENTURE";
-		Title.Print(font, 30, window, PTitle, 800, 500, Color::White);
+		Title.Print(font, 100, window, PTitle, 550, 450, Color::Red);
 
 	}
 
@@ -286,7 +286,7 @@ public:
 		Display GoldPlayer;
 
 		string GPlayer;
-		GPlayer = "Argent : " + to_string(player->health);
+		GPlayer = "Argent : " + to_string(player->money);
 		GoldPlayer.Print(font, 30, window, GPlayer, 20, 40, Color::Yellow);
 	}
 
