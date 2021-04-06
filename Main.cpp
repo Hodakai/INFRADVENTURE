@@ -35,7 +35,7 @@ int main()
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//    }
 	Player* player = new Player(100, 100, "Hodaka", weapon);//                          }---- Création des éléments principaux du jeu avec des pointeurs en début du jeu
-	Monster* monster = new Monster(100, "Camrond", 'A');//                              }
+	Monster* monster = new Monster(100, "Camrond-America", 'A');//                              }
 	
 	Sprite bossSprite;
 	Sprite weaponSprite;
@@ -79,7 +79,7 @@ int main()
 			HUD HUD;
 			HUD.InitHUD(player, monster, weapon, window, font);
 
-			monster->CreateSprite(window, font, "1stBOSS.png", 1, 675, 200, 2, 2, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
+			monster->CreateSprite(window, font, "1stBOSS.png", 1, 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{

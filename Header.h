@@ -11,6 +11,8 @@
 using namespace std;
 using namespace sf;
 
+////////////////////////////////////////////////       CLASSE DISPLAY       ////////////////////////////////////////////////
+
 class Display
 {
 public:
@@ -50,7 +52,7 @@ public:
 	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, float x, float y, float Sx, float Sy, Sprite boss);
 	string GetWeaponName();
 	string GetWeaponImg();
-	int GetWeaponCrit();
+	float GetWeaponCrit();
 
 private:
 
@@ -73,7 +75,7 @@ string Weapon::GetWeaponImg() {
 	return img;
 }
 
-int Weapon::GetWeaponCrit() {
+float Weapon::GetWeaponCrit() {
 	return crit;
 }
 
@@ -157,19 +159,19 @@ void Monster::GettingDamaged(Weapon* weapon, RenderWindow& window, Font font) {
 		this->health -= weapon->dmgEvryClic * 2; // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
 		Display Critical;
 		string Crit;
-		Crit = "Crit ! " + to_string(weapon->dmgEvryClic * 2);
-		float probaAffichageX = rand() % 1000 + 500;
-		float probaAffichageY = rand() % 500 + 200;
-		Critical.Print(font, 45, window, Crit, probaAffichageX, probaAffichageY, Color::Red);
+		Crit = "Critique ! " + to_string(weapon->dmgEvryClic * 2);
+		int probaAffichageX = rand() % 1000 + 500;
+		int probaAffichageY = rand() % 500 + 200;
+		Critical.Print(font, 100, window, Crit, probaAffichageX, probaAffichageY, Color::Red);
 	}
 	else {
 		this->health -= weapon->dmgEvryClic;
 		Display Critical;
 		string Crit;
 		Crit = to_string(weapon->dmgEvryClic);
-		float probaAffichageX = rand() % 1000 + 500;
-		float probaAffichageY = rand() % 500 + 200;
-		Critical.Print(font, 30, window, Crit, probaAffichageX, probaAffichageY, Color::Red);
+		int probaAffichageX = rand() % 1000 + 500;
+		int probaAffichageY = rand() % 500 + 200;
+		Critical.Print(font, 75, window, Crit, probaAffichageX, probaAffichageY, Color::Red);
 	}
 }
 
@@ -192,7 +194,7 @@ void Monster::CreateSprite(RenderWindow& window, Font font, string img, int nbBo
 }
 
 
-////////////////////////////////////////////////       DISPLAY & GAME-EVENTS       ////////////////////////////////////////////////
+////////////////////////////////////////////////       CLASSE GAME-EVENTS        ////////////////////////////////////////////////
 
 
 class GameEvents
@@ -258,6 +260,8 @@ void resized(RenderWindow& window, Font font) {
 
 }
 
+////////////////////////////////////////////////       CLASSE HUD        ////////////////////////////////////////////////
+
 /// <summary>
 /// Sert à afficher toutes les informations à l'écran pour le joueur, c'est le HUD (Head Up Display)
 /// </summary>
@@ -303,7 +307,7 @@ public:
 
 		string NMonster;
 		NMonster = monster->name;
-		NameMonster.Print(font, 75, window, NMonster, 800, 800, Color::Red);
+		NameMonster.Print(font, 75, window, NMonster, 650, 800, Color::Red);
 	}
 
 	void WeaponName(Weapon* weapon, RenderWindow& window, Font font) {
