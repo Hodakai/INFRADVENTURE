@@ -1,7 +1,4 @@
-#include "Fonctions.h";
-#include "Weapon.h";
-#include "Player.h";
-#include "Monster.h";
+#include "Header.h"
 
 using namespace std;
 using namespace sf;
@@ -11,15 +8,18 @@ int main()
 {
 	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
 		
-	
-	Weapon weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
+	/*Weapon weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
 	Weapon* weapon1 = &weapon;
 
 	Player player(100, 100, "Hodaka", weapon1);
 	Player* player1 = &player;
 
 	Monster monster(100, "Camrond", 'A');
-	Monster* monster1 = &monster;
+	Monster* monster1 = &monster;*/
+
+	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
+	Player* player = new Player(100, 100, "Hodaka", weapon);
+	Monster* monster = new Monster(100, "Camrond", 'A');
 	 
 	Sprite bossSprite;
 	Sprite weaponSprite;
@@ -29,7 +29,8 @@ int main()
 	Font font;
 	font.loadFromFile("arial.ttf");
 
-	//player.Intro(font, window);
+	GameEvents game;
+	game.Intro(font, window);
 
 	window.display();
 
@@ -55,12 +56,12 @@ int main()
 
 			window.clear();
 
-			weapon.CreateSprite(window, font, "Epée en carton.png", 1, 1350, 700, 0.75, 0.75, weaponSprite);
+			weapon->CreateSprite(window, font, "Epée en carton.png", 1, 1350, 700, 0.75, 0.75, weaponSprite);
 			
 			HUD HUD;
 			HUD.InitHUD(player, monster, weapon, window, font);
 
-			monster.CreateSprite(window, font, "1stBOSS.png", 1, 675, 200, 2, 2, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
+			monster->CreateSprite(window, font, "1stBOSS.png", 1, 675, 200, 2, 2, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
@@ -74,7 +75,7 @@ int main()
 			}*/
 
 			if (event.type == Event::MouseButtonPressed) {
-				weapon.Atk(monster1, window, font);
+				monster->GettingDamaged(weapon, window, font);
 			}
 
 			window.display();
