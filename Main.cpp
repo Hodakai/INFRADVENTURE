@@ -7,41 +7,32 @@ int main()
 {
 	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
 
-	/*Weapon weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
-	Weapon* weapon1 = &weapon;
-
-	Player player(100, 100, "Hodaka", weapon1);
-	Player* player1 = &player;
-
-	Monster monster(100, "Camrond", 'A');
-	Monster* monster1 = &monster;*/
-
 	Music theme;
 	if (!theme.openFromFile("Avengers.ogg")) {
-		cout << "Could not load music theme..." << endl;
+		cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
 	}
 	theme.setVolume(5);
 
 	SoundBuffer buffer;
 	if (!buffer.loadFromFile("Punch.ogg")) {
-		cout << "Could not load Punch sound..." << endl;
+		cout << "Could not load Punch sound..." << endl; //Open le fichier du son d'attaque pour le mettre dans le buffer
 	}
 
 	Sound Punch;
-	Punch.setBuffer(buffer);
+	Punch.setBuffer(buffer); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
 	Punch.setVolume(5);
 
-	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
-	Player* player = new Player(100, 100, "Hodaka", weapon);
-	Monster* monster = new Monster(100, "Camrond", 'A');
-	 
+	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//    }
+	Player* player = new Player(100, 100, "Hodaka", weapon);//                          }---- Création des éléments principaux du jeu avec des pointeurs en début du jeu
+	Monster* monster = new Monster(100, "Camrond", 'A');//                              }
+	
 	Sprite bossSprite;
 	Sprite weaponSprite;
 
 	window.clear();
 
 	Font font;
-	font.loadFromFile("arial.ttf");
+	font.loadFromFile("arial.ttf"); //Load de la font afin de pouvoir écrir du texte
 
 	GameEvents game;
 	game.Intro(font, window);
@@ -50,7 +41,7 @@ int main()
 
 	Sleep(2000);
 
-	theme.play();
+	theme.play(); //Lancement de la musique de fond
 
 	while (window.isOpen()) {
 
