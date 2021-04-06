@@ -18,9 +18,18 @@ int main()
 
 	Music theme;
 	if (!theme.openFromFile("Avengers.ogg")) {
-		cout << "Could not load music theme" << endl;
+		cout << "Could not load music theme..." << endl;
 	}
 	theme.setVolume(5);
+
+	SoundBuffer buffer;
+	if (!buffer.loadFromFile("Punch.ogg")) {
+		cout << "Could not load Punch sound..." << endl;
+	}
+
+	Sound Punch;
+	Punch.setBuffer(buffer);
+	Punch.setVolume(5);
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
 	Player* player = new Player(100, 100, "Hodaka", weapon);
@@ -83,6 +92,7 @@ int main()
 
 			if (event.type == Event::MouseButtonPressed) {
 				monster->GettingDamaged(weapon, window, font);
+				Punch.play();
 			}
 
 			window.display();
