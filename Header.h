@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Main.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <time.h>
 #include <Windows.h>

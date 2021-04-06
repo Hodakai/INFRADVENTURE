@@ -3,11 +3,10 @@
 using namespace std;
 using namespace sf;
 
-
 int main()
 {
 	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
-		
+
 	/*Weapon weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
 	Weapon* weapon1 = &weapon;
 
@@ -16,6 +15,12 @@ int main()
 
 	Monster monster(100, "Camrond", 'A');
 	Monster* monster1 = &monster;*/
+
+	Music theme;
+	if (!theme.openFromFile("Avengers.ogg")) {
+		cout << "Could not load music theme" << endl;
+	}
+	theme.setVolume(5);
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");
 	Player* player = new Player(100, 100, "Hodaka", weapon);
@@ -35,6 +40,8 @@ int main()
 	window.display();
 
 	Sleep(2000);
+
+	theme.play();
 
 	while (window.isOpen()) {
 
