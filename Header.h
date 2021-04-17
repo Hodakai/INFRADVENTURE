@@ -136,9 +136,9 @@ public:
 	string name;
 	char abilities;
 	string image;
-	//string desc;
+	string desc;
 
-	Monster(int health, string name, char abilites);
+	Monster(int health, string name, char abilites, string desc);
 	~Monster();
 	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
 	void GettingDamaged(Weapon* weapon, RenderWindow& window, Font font);
@@ -147,11 +147,11 @@ private:
 
 };
 
-Monster::Monster(int health, string name, char abilities) {
+Monster::Monster(int health, string name, char abilities, string desc) {
 	this->health = health;
 	this->name = name;
 	this->abilities = abilities;
-	//this->desc = desc;
+	this->desc = desc;
 }
 
 Monster::~Monster()
@@ -318,13 +318,13 @@ public:
 		NameMonster.Print(font, 75, window, NMonster, 650, 800, Color::Red);
 	}
 
-	/*void MonsterDescription(Monster* monster, RenderWindow& window, Font font) {
+	void MonsterDescription(Monster* monster, RenderWindow& window, Font font) {
 		Display DescMonster;
 
 		string DescripMonster;
 		DescripMonster = monster->desc;
-		DescMonster.Print(font, 75, window, DescripMonster, 650, 800, Color::Red);
-	}*/
+		DescMonster.Print(font, 75, window, DescripMonster, 0, 0, Color::White);
+	}
 
 	void WeaponName(Weapon* weapon, RenderWindow& window, Font font) {
 		Display NameMonster;

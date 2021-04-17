@@ -5,7 +5,7 @@ using namespace sf;
 
 int main()
 {
-	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE"/*, Style::Fullscreen*/);
+	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
 
 	window.setVerticalSyncEnabled(true);
 
@@ -35,9 +35,9 @@ int main()
 	Punch.setBuffer(bufferPunch); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
 	Punch.setVolume(5);
 
-	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//    }
-	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                    }---- Création des éléments principaux du jeu avec des pointeurs en début du jeu
-	Monster* monster = new Monster(100, "Camrond-America", 'A');//                      }
+	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//                                                                       }
+	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                                                       }---- Création des éléments principaux du jeu 
+	Monster* monster = new Monster(100, "Camrond-America", 'A', "Captain America a mal vecu l'arrivee du nouveau captain, il est devenu enrager !!!");//   }---- avec des pointeurs en début du jeu
 	
 	Sprite bossSprite;
 	Sprite weaponSprite;
