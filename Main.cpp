@@ -37,7 +37,7 @@ int main()
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//                                                                       }
 	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                                                       }---- Création des éléments principaux du jeu 
-	Monster* monster = new Monster(100, "Camrond-America", 'A', "Captain America a mal vecu l'arrivee du nouveau captain, il est devenu enrager !!!");//   }---- avec des pointeurs en début du jeu
+	Monster* monster = new Monster(100, "Camrond-America", 'A', "Captain America a mal vecu l'arrivee du nouveau captain, il est devenu enrager !!!", 2, .1);//   }---- avec des pointeurs en début du jeu
 	
 	Sprite bossSprite;
 	Sprite weaponSprite;
@@ -73,7 +73,7 @@ int main()
 			HUD HUD;
 			HUD.InitHUD(player, monster, weapon, window, font);
 
-			monster->CreateSprite(window, font, "1stBOSS.png", 1, 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
+			monster->CreateSprite(window, font, "1stBOSS.png", 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
@@ -89,6 +89,7 @@ int main()
 			if (event.type == Event::MouseButtonPressed) {
 				monster->GettingDamaged(weapon, window, font);
 				player->money++;
+				player->GettingDamaged(monster, window, font);
 				Punch.play();
 			}
 

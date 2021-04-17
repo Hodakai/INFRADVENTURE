@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <algorithm>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 using namespace sf;
@@ -96,36 +97,6 @@ void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWea
 	window.draw(weaponSprite);
 }
 
-
-////////////////////////////////////////////////       CLASSE PLAYER       ////////////////////////////////////////////////
-
-class Player
-{
-public:
-	int money;
-	int health;
-	int moneyPerSec; //Argent par seconde du joueur
-	int multiplicateur; //Tout est dans le nom
-	string name;
-	Weapon* weapon;
-
-	Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon);
-
-private:
-
-
-};
-
-//Constructeur
-Player::Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon) {
-	this->money = money;
-	this->moneyPerSec = moneyPS;
-	this->multiplicateur = multiplicateur;
-	this->health = health;
-	this->name = name;
-	this->weapon = weapon;
-}
-
 ////////////////////////////////////////////////       CLASSE MONSTER       ////////////////////////////////////////////////
 
 class Monster
@@ -133,30 +104,49 @@ class Monster
 public:
 
 	int health;
+	int healthMax; //Nombre de pv du monstre à la base sans qu'il ait subi d'attaque
 	string name;
 	char abilities;
 	string image;
 	string desc;
 
-	Monster(int health, string name, char abilites, string desc);
+	//////////////////     Stats reliées à l'IA du monstre     //////////////////
+
+	int atk; //Nombre de dégats que peut infliger l'ennemi au joueur
+	float atkChance; //Pourcntage d'attaque du monstre
+
+	Monster(int health, string name, char abilites, string desc, int atk, float atkChance);
 	~Monster();
-	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
+	void CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
 	void GettingDamaged(Weapon* weapon, RenderWindow& window, Font font);
+	int GetAtk();
+	float GetAtkChance();
 
 private:
 
 };
 
-Monster::Monster(int health, string name, char abilities, string desc) {
+Monster::Monster(int health, string name, char abilities, string desc, int atk, float atkChance) {
 	this->health = health;
 	this->name = name;
 	this->abilities = abilities;
 	this->desc = desc;
+	this->atk = atk;
+	this->atkChance = atkChance;
+	this->healthMax = health;
 }
 
 Monster::~Monster()
 {
 
+}
+
+int Monster::GetAtk() {
+	return this->atk;
+}
+
+float Monster::GetAtkChance() {
+	return this->atkChance;
 }
 
 void Monster::GettingDamaged(Weapon* weapon, RenderWindow& window, Font font) {
@@ -181,8 +171,8 @@ void Monster::GettingDamaged(Weapon* weapon, RenderWindow& window, Font font) {
 	}
 }
 
-// La fameuse fonction avec 100000000 d'arguments xD
-void Monster::CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, float x, float y, float Sx, float Sy, Sprite boss) {
+
+void Monster::CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss) {
 	sf::Texture texture;
 
 	if (!texture.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
@@ -197,6 +187,72 @@ void Monster::CreateSprite(RenderWindow& window, Font font, string img, int nbBo
 	boss.scale(Sx, Sy);
 
 	window.draw(boss);
+}
+
+////////////////////////////////////////////////       CLASSE PLAYER       ////////////////////////////////////////////////
+
+class Player
+{
+public:
+	int money;
+	int health;
+	int moneyPerSec; //Argent par seconde du joueur
+	int multiplicateur; //Tout est dans le nom
+	string name;
+	Weapon* weapon;
+
+	Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon);
+	void GettingDamaged(Monster* monster, RenderWindow& window, Font font);
+
+private:
+
+
+};
+
+//Constructeur
+Player::Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon) {
+	this->money = money;
+	this->moneyPerSec = moneyPS;
+	this->multiplicateur = multiplicateur;
+	this->health = health;
+	this->name = name;
+	this->weapon = weapon;
+}
+
+void Player::GettingDamaged(Monster* monster, RenderWindow& window, Font font) {
+	int probaDmg = rand() % 100; // création de la probabilité de recevoir un coup de la part du monstre
+	int probaAffichageX = rand() % 1000 + 500;
+	int probaAffichageY = rand() % 500 + 200;
+	if (monster->GetAtkChance() * 100 > probaDmg) {
+		this->health -= monster->GetAtk(); // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
+		/*Display Critical;
+		string Crit;
+		Crit = "Critique ! " + to_string(weapon->dmgEvryClic * 2);
+		int probaAffichageX = rand() % 1000 + 500;
+		int probaAffichageY = rand() % 500 + 200;
+		Critical.Print(font, 100, window, Crit, probaAffichageX, probaAffichageY, Color::Red);*/
+	}
+	else if (monster->GetAtkChance() * 100 + 25 > probaDmg && monster->health < .1 * monster->healthMax) {
+		this->health -= monster->GetAtk() * 2.5;
+		Display EnragedAktMonster;
+		string EAMonster;
+		EAMonster = "BOOOOM !!!";
+		EnragedAktMonster.Print(font, 100, window, EAMonster, probaAffichageX, probaAffichageY, Color::Magenta);
+	}
+	else if (monster->GetAtkChance() * 100 + 10 > probaDmg && monster->health < .25 * monster->healthMax) {
+		this->health -= monster->GetAtk() * 2;
+		Display EnragedAktMonster;
+		string EAMonster;
+		EAMonster = "RAHHHH !!!";
+		EnragedAktMonster.Print(font, 100, window, EAMonster, probaAffichageX, probaAffichageY, Color::Green);
+	}
+	else if (monster->GetAtkChance() * 100 + 5 > probaDmg && monster->health < .5 * monster->healthMax) {
+		this->health -= monster->GetAtk() * 1.5;
+		Display SuperAktMonster;
+		string SAMonster;
+		SAMonster = "Grrrrr !!!";
+		SuperAktMonster.Print(font, 100, window, SAMonster, probaAffichageX, probaAffichageY, Color::Cyan);
+	}
 }
 
 
