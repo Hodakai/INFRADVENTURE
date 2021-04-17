@@ -104,10 +104,12 @@ class Player
 public:
 	int money;
 	int health;
+	int moneyPerSec; //Argent par seconde du joueur
+	int multiplicateur; //Tout est dans le nom
 	string name;
 	Weapon* weapon;
 
-	Player(int money, int health, string name, Weapon* weapon);
+	Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon);
 
 private:
 
@@ -115,8 +117,10 @@ private:
 };
 
 //Constructeur
-Player::Player(int money, int health, string name, Weapon* weapon) {
+Player::Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon) {
 	this->money = money;
+	this->moneyPerSec = moneyPS;
+	this->multiplicateur = multiplicateur;
 	this->health = health;
 	this->name = name;
 	this->weapon = weapon;
@@ -132,6 +136,7 @@ public:
 	string name;
 	char abilities;
 	string image;
+	//string desc;
 
 	Monster(int health, string name, char abilites);
 	~Monster();
@@ -146,6 +151,7 @@ Monster::Monster(int health, string name, char abilities) {
 	this->health = health;
 	this->name = name;
 	this->abilities = abilities;
+	//this->desc = desc;
 }
 
 Monster::~Monster()
@@ -216,6 +222,8 @@ public:
 		Display Title;
 		string PTitle = "INFRADVENTURE";
 		Title.Print(font, 100, window, PTitle, 550, 450, Color::Red);
+
+		window.display();
 
 	}
 
@@ -309,6 +317,14 @@ public:
 		NMonster = monster->name;
 		NameMonster.Print(font, 75, window, NMonster, 650, 800, Color::Red);
 	}
+
+	/*void MonsterDescription(Monster* monster, RenderWindow& window, Font font) {
+		Display DescMonster;
+
+		string DescripMonster;
+		DescripMonster = monster->desc;
+		DescMonster.Print(font, 75, window, DescripMonster, 650, 800, Color::Red);
+	}*/
 
 	void WeaponName(Weapon* weapon, RenderWindow& window, Font font) {
 		Display NameMonster;

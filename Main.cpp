@@ -5,7 +5,9 @@ using namespace sf;
 
 int main()
 {
-	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
+	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE"/*, Style::Fullscreen*/);
+
+	window.setVerticalSyncEnabled(true);
 
 	SoundBuffer bufferIntro;
 	if (!bufferIntro.loadFromFile("Intro.ogg")) {
@@ -34,8 +36,8 @@ int main()
 	Punch.setVolume(5);
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//    }
-	Player* player = new Player(100, 100, "Hodaka", weapon);//                          }---- Création des éléments principaux du jeu avec des pointeurs en début du jeu
-	Monster* monster = new Monster(100, "Camrond-America", 'A');//                              }
+	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                    }---- Création des éléments principaux du jeu avec des pointeurs en début du jeu
+	Monster* monster = new Monster(100, "Camrond-America", 'A');//                      }
 	
 	Sprite bossSprite;
 	Sprite weaponSprite;
@@ -45,10 +47,8 @@ int main()
 	Font font;
 	font.loadFromFile("arial.ttf"); //Load de la font afin de pouvoir écrir du texte
 
-	GameEvents game;
-	game.Intro(font, window);
-
-	window.display();
+	GameEvents* game = new GameEvents;
+	game->Intro(font, window);
 
 	Sleep(3500);
 
@@ -66,16 +66,10 @@ int main()
 
 			}
 
-			if (event.type == Event::Resized) {
-
-				resized(window, font);
-
-			}
-
 			window.clear();
 
 			weapon->CreateSprite(window, font, "Epée en carton.png", 1, 1350, 700, 0.75, 0.75, weaponSprite);
-			
+
 			HUD HUD;
 			HUD.InitHUD(player, monster, weapon, window, font);
 
@@ -99,7 +93,6 @@ int main()
 			}
 
 			window.display();
-			
 		}
 	}
 }
