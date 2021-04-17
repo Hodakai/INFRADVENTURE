@@ -35,9 +35,9 @@ int main()
 	Punch.setBuffer(bufferPunch); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
 	Punch.setVolume(5);
 
-	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//                                                                       }
-	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                                                       }---- Création des éléments principaux du jeu 
-	Monster* monster = new Monster(100, "Camrond-America", 'A', "Captain America a mal vecu l'arrivee du nouveau captain, il est devenu enrager !!!", 2, .1);//   }---- avec des pointeurs en début du jeu
+	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//                                                                               }
+	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                                                               }---- Création des éléments principaux du jeu 
+	Monster* monster = new Monster(100, "Camrond-America", 'A', "Captain America a mal vecu l'arrivee du nouveau captain, il est devenu enrager !!!", 1, .1); //   }---- avec des pointeurs en début du jeu
 	
 	Sprite bossSprite;
 	Sprite weaponSprite;
@@ -75,24 +75,15 @@ int main()
 
 			monster->CreateSprite(window, font, "1stBOSS.png", 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
 
-			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				if (boss.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) // ici on check la taille de l'image du boss et on vérifie si la souris est dedans
-				{                                                                                             // si elle est dedans et que l'on clique sur la souris, alors -|
-					if (event.type == Event::MouseButtonPressed) {                                            //                                                             |
-						monster1.health -= weaponLvl1.dmgEvryClic;//     <---------------------------------------------------------------------------------------------------|
-						player.money++;
-					}                                                                                         // mais ça marche pas encore, je pense qu'il faudrait checker si la souris se trouve
-				}																							  // dans un rectangle que l'on aurait fait au préalable, comme un cadre autour de l'image
-			}*/
-
-			if (event.type == Event::MouseButtonPressed) {
-				monster->GettingDamaged(weapon, window, font);
-				player->money++;
-				player->GettingDamaged(monster, window, font);
-				Punch.play();
-			}
-
+			/*if (bossSprite.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window)))) // ici on check la taille de l'image du boss et on vérifie si la souris est dedans
+			{*/                                                                                             // si elle est dedans et que l'on clique sur la souris, alors -|
+				if (event.type == Event::MouseButtonPressed) {                                            //                                                             |
+					monster->GettingDamaged(weapon, game, window, font); // <--------------------------------------------------------------------------------------------|
+					player->money++;                                                                      // mais ça marche pas encore, je pense qu'il faudrait checker si la souris se trouve
+					player->GettingDamaged(monster, game, window, font);		    					  // dans un rectangle que l'on aurait fait au préalable, comme un cadre autour de l'image
+					Punch.play();
+				}         
+			//}														
 			window.display();
 		}
 	}

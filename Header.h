@@ -38,6 +38,111 @@ private:
 	string str;
 };
 
+////////////////////////////////////////////////       CLASSE GAME-EVENTS        ////////////////////////////////////////////////
+
+
+class GameEvents
+{
+public:
+	void Intro(Font font, RenderWindow& window);
+	void Win(Font font, RenderWindow& window);
+	void GameOver(Font font, RenderWindow& window);
+
+private:
+
+};
+
+void GameEvents::Intro(Font font, RenderWindow& window) {
+
+	Display Welcome;
+	string PWelcome = "Welcome to...";
+	Welcome.Print(font, 75, window, PWelcome, 700, 450, Color::White);
+
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Sprite Infradventure;
+
+	Texture texture;
+
+	if (!texture.loadFromFile("Infradventure.png")) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
+
+		cout << "Texture : Infradventure.png -> loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+		system("pause");
+
+	}
+
+	Infradventure.setTexture(texture);
+	window.draw(Infradventure);
+	window.display();
+
+}
+
+void GameEvents::Win(Font font, RenderWindow& window) {
+
+	window.clear();
+
+	Display Win;
+	string PWin = "Vous avez gagné face au premier boss !!! Bravo !!!";
+	Win.Print(font, 20, window, PWin, 800, 500, Color::White);
+
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Display End;
+	string PEnd = "Merci d'avoir joué !!!";
+	End.Print(font, 20, window, PEnd, 800, 500, Color::White);
+
+	window.display();
+
+	Sleep(5000);
+
+	window.close();
+}
+
+void GameEvents::GameOver(Font font, RenderWindow& window) {
+
+	window.clear();
+
+	Display Loose;
+	string PLoose = "Vous avez perdu !!!";
+	Loose.Print(font, 50, window, PLoose, 800, 500, Color::White);
+
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Display End;
+	string PEnd = "Merci d'avoir joué !!!";
+	End.Print(font, 20, window, PEnd, 800, 500, Color::White);
+
+	window.display();
+
+	Sleep(5000);
+
+	window.close();
+}
+
+// J'ai fait une fonction pour le message de resize de la window ;) 
+void resized(RenderWindow& window, Font font) {
+
+	window.clear();
+	Display warningResize;
+	string WarnRstr = "Attention ! Vous avez redimentionne la fenetre, cela peut affecter l'affichage de certains elements !";
+	warningResize.Print(font, 20, window, WarnRstr, 500, 500, Color::White);
+	window.display();
+	Sleep(3000);
+
+}
+
 ////////////////////////////////////////////////       CLASSE WEAPON       ////////////////////////////////////////////////
 
 class Weapon
@@ -118,7 +223,7 @@ public:
 	Monster(int health, string name, char abilites, string desc, int atk, float atkChance);
 	~Monster();
 	void CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
-	void GettingDamaged(Weapon* weapon, RenderWindow& window, Font font);
+	void GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& window, Font font);
 	int GetAtk();
 	float GetAtkChance();
 
@@ -149,9 +254,12 @@ float Monster::GetAtkChance() {
 	return this->atkChance;
 }
 
-void Monster::GettingDamaged(Weapon* weapon, RenderWindow& window, Font font) {
+void Monster::GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& window, Font font) {
 	int probaCrit = rand() % 100; // création de la probabilité d'infliger un coup critique
-	if (weapon->GetWeaponCrit() * 100 > probaCrit) {
+	if (this->health == 0) {
+		Game->Win(font, window);
+	}
+	else if (weapon->GetWeaponCrit() * 100 > probaCrit) {
 		this->health -= weapon->dmgEvryClic * 2; // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
 		Display Critical;
 		string Crit;
@@ -202,7 +310,7 @@ public:
 	Weapon* weapon;
 
 	Player(int money, int moneyPS, int multiplicateur, int health, string name, Weapon* weapon);
-	void GettingDamaged(Monster* monster, RenderWindow& window, Font font);
+	void GettingDamaged(Monster* monster, GameEvents* Game, RenderWindow& window, Font font);
 
 private:
 
@@ -219,11 +327,15 @@ Player::Player(int money, int moneyPS, int multiplicateur, int health, string na
 	this->weapon = weapon;
 }
 
-void Player::GettingDamaged(Monster* monster, RenderWindow& window, Font font) {
+void Player::GettingDamaged(Monster* monster, GameEvents* Game, RenderWindow& window, Font font) {
 	int probaDmg = rand() % 100; // création de la probabilité de recevoir un coup de la part du monstre
+	cout << probaDmg << endl;
 	int probaAffichageX = rand() % 1000 + 500;
 	int probaAffichageY = rand() % 500 + 200;
-	if (monster->GetAtkChance() * 100 > probaDmg) {
+	if (this->health == 0) {
+		Game->GameOver(font, window);
+	}
+	else if (monster->GetAtkChance() * 100 > probaDmg) {
 		this->health -= monster->GetAtk(); // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
 		/*Display Critical;
 		string Crit;
@@ -253,84 +365,6 @@ void Player::GettingDamaged(Monster* monster, RenderWindow& window, Font font) {
 		SAMonster = "Grrrrr !!!";
 		SuperAktMonster.Print(font, 100, window, SAMonster, probaAffichageX, probaAffichageY, Color::Cyan);
 	}
-}
-
-
-////////////////////////////////////////////////       CLASSE GAME-EVENTS        ////////////////////////////////////////////////
-
-
-class GameEvents
-{
-public:
-
-	void Intro(Font font, RenderWindow& window) {
-
-		Display Welcome;
-		string PWelcome = "Welcome to...";
-		Welcome.Print(font, 75, window, PWelcome, 700, 450, Color::White);
-
-		window.display();
-
-		Sleep(2000);
-
-		window.clear();
-
-		Sprite Infradventure;
-
-		Texture texture;
-
-		if (!texture.loadFromFile("Infradventure.png")) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
-
-			cout << "Texture : Infradventure.png -> loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
-			system("pause");
-
-		}
-
-		Infradventure.setTexture(texture);
-		window.draw(Infradventure);
-		window.display();
-
-	}
-
-	void Win(Font font, RenderWindow& window) {
-
-		window.clear();
-
-		Display Win;
-		string PWin = "Vous avez gagné face au premier boss !!! Bravo !!!";
-		Win.Print(font, 20, window, PWin, 800, 500, Color::White);
-
-		window.display();
-
-		Sleep(2000);
-
-		window.clear();
-
-		Display End;
-		string PEnd = "Merci d'avoir joué !!!";
-		End.Print(font, 20, window, PEnd, 800, 500, Color::White);
-
-		window.display();
-
-		Sleep(5000);
-
-		window.close();
-	}
-
-private:
-
-};
-
-// J'ai fait une fonction pour le message de resize de la window ;) 
-void resized(RenderWindow& window, Font font) {
-
-	window.clear();
-	Display warningResize;
-	string WarnRstr = "Attention ! Vous avez redimentionne la fenetre, cela peut affecter l'affichage de certains elements !";
-	warningResize.Print(font, 20, window, WarnRstr, 500, 500, Color::White);
-	window.display();
-	Sleep(3000);
-
 }
 
 ////////////////////////////////////////////////       CLASSE HUD        ////////////////////////////////////////////////
