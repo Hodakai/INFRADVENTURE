@@ -275,10 +275,19 @@ public:
 
 		window.clear();
 
-		Display Title;
-		string PTitle = "INFRADVENTURE";
-		Title.Print(font, 100, window, PTitle, 550, 450, Color::Red);
+		Sprite Infradventure;
 
+		Texture texture;
+
+		if (!texture.loadFromFile("Infradventure.png")) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
+
+			cout << "Texture : Infradventure.png -> loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+			system("pause");
+
+		}
+
+		Infradventure.setTexture(texture);
+		window.draw(Infradventure);
 		window.display();
 
 	}
