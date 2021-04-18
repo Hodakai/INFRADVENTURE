@@ -27,13 +27,13 @@ int main()
 	theme.setVolume(5);
 
 	SoundBuffer bufferPunch;
-	if (!bufferPunch.loadFromFile("Punch.ogg")) {
+	if (!bufferPunch.loadFromFile("Hitmarker.ogg")) {
 		cout << "Could not load Punch sound..." << endl; //Open le fichier du son d'attaque pour le mettre dans le buffer
 	}
 
-	Sound Punch;
-	Punch.setBuffer(bufferPunch); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
-	Punch.setVolume(5);
+	Sound Hit;
+	Hit.setBuffer(bufferPunch); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
+	Hit.setVolume(15);
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//                                                                               }
 	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                                                               }---- Création des éléments principaux du jeu 
@@ -80,7 +80,22 @@ int main()
 					monster->GettingDamaged(weapon, game, window, font); // <--------------------------------------------------------------------------------------------|
 					player->money++; //Augmentation de l'argent du joueur pour acheter des items dans la boutique                                                                    
 					player->GettingDamaged(monster, game, window, font); //Ici cette fonction représente l'attaque que le monstre peut réaliser envers le joueur, le joueur peut ne pas prendre de dégats lors de son attaque		    					 
-					Punch.play(); //Son joué lors d'une attaque     
+					Hit.play(); //Son joué lors d'une attaque
+					Sprite HitSprite;
+					sf::Texture textureHit;
+
+					if (!textureHit.loadFromFile("HitmarkerIMG.png")) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
+
+						cout << "Texture : HitmarkerIMG.png, loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+						system("pause");
+
+					}
+
+					HitSprite.setTexture(textureHit);
+					Vector2f truc = { 5.f, 5.f };
+					HitSprite.setPosition(window.mapPixelToCoords(Mouse::getPosition(window)));
+					HitSprite.scale(.1, .1);
+					window.draw(HitSprite);
 			}														
 			window.display();
 		}
