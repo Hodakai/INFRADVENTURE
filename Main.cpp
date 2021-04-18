@@ -5,7 +5,7 @@ using namespace sf;
 
 int main()
 {
-	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE");
+	RenderWindow window(VideoMode(1920, 1080), "INFRADVENTURE", Style::Fullscreen);
 
 	window.setVerticalSyncEnabled(true);
 
@@ -70,17 +70,17 @@ int main()
 
 			weapon->CreateSprite(window, font, "Epée en carton.png", 1, 1350, 700, 0.75, 0.75, weaponSprite);
 
-			HUD HUD;
-			HUD.InitHUD(player, monster, weapon, window, font);
+			HUD* GUI = new HUD(player, monster, weapon, font);
+			GUI->InitHUD(window);
 
 			Sprite boss = monster->CreateSprite(window, font, "1stBOSS.png", 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1 que l'on récupère pour la condition d'après
 
 			if (boss.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))) && event.type == Event::MouseButtonPressed) // ici on check les bordures de l'image du boss et on vérifie si la souris est dedans
 			{                                                                                             // si elle est dedans et que l'on clique sur la souris, alors -|                   
 					monster->GettingDamaged(weapon, game, window, font); // <--------------------------------------------------------------------------------------------|
-					player->money++;                                                                     
-					player->GettingDamaged(monster, game, window, font);		    					 
-					Punch.play();      
+					player->money++; //Augmentation de l'argent du joueur pour acheter des items dans la boutique                                                                    
+					player->GettingDamaged(monster, game, window, font); //Ici cette fonction représente l'attaque que le monstre peut réaliser envers le joueur, le joueur peut ne pas prendre de dégats lors de son attaque		    					 
+					Punch.play(); //Son joué lors d'une attaque     
 			}														
 			window.display();
 		}

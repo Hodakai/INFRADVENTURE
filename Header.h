@@ -376,63 +376,147 @@ void Player::GettingDamaged(Monster* monster, GameEvents* Game, RenderWindow& wi
 class HUD : public Display // Classe dérivée de Display qui permet d'afficher le HUD 
 {
 public:
+	HUD(Player* player, Monster* monster, Weapon* weapon, Font font);
 
-	void InitHUD(Player* player, Monster* monster, Weapon* weapon, RenderWindow& window, Font font) {
-		PlayerHealth(player, window, font);
-		PlayerGold(player, window, font);
-		MonsterHealth(monster, window, font);
-		MonsterName(monster, window, font);
-		WeaponName(weapon, window, font);
-	}
+	void renderHpBarPlayer(RenderWindow& window);
+	void renderHpBarMonster(RenderWindow& window);
 
-	void PlayerHealth(Player* player, RenderWindow& window, Font font) {
-		Display HealthPlayer;
-
-		string PvPlayer;
-		PvPlayer = "Vie : " + to_string(player->health);
-		HealthPlayer.Print(font, 30, window, PvPlayer, 20, 0, Color::Green);
-	}
-
-	void PlayerGold(Player* player, RenderWindow& window, Font font) {
-		Display GoldPlayer;
-
-		string GPlayer;
-		GPlayer = "Argent : " + to_string(player->money);
-		GoldPlayer.Print(font, 30, window, GPlayer, 20, 40, Color::Yellow);
-	}
-
-	void MonsterHealth(Monster* monster, RenderWindow& window, Font font) {
-		Display HealthMonster;
-
-		string PvMonster;
-		PvMonster = to_string(monster->health);
-		HealthMonster.Print(font, 75, window, PvMonster, 910, 100, Color::Red);
-	}
-
-	void MonsterName(Monster* monster, RenderWindow& window, Font font) {
-		Display NameMonster;
-
-		string NMonster;
-		NMonster = monster->name;
-		NameMonster.Print(font, 75, window, NMonster, 650, 800, Color::Red);
-	}
-
-	void MonsterDescription(Monster* monster, RenderWindow& window, Font font) {
-		Display DescMonster;
-
-		string DescripMonster;
-		DescripMonster = monster->desc;
-		DescMonster.Print(font, 75, window, DescripMonster, 0, 0, Color::White);
-	}
-
-	void WeaponName(Weapon* weapon, RenderWindow& window, Font font) {
-		Display NameMonster;
-
-		string NWeapon;
-		NWeapon = weapon->name;
-		NameMonster.Print(font, 25, window, NWeapon, 1640, 990, Color::White);
-	}
+	void InitHUD(RenderWindow& window);
+	void PlayerHealth(RenderWindow& window);
+	void PlayerGold(RenderWindow& window);
+	void MonsterHealth(RenderWindow& window);
+	void MonsterName(RenderWindow& window);
+	void MonsterDescription(RenderWindow& window);
+	void WeaponName(RenderWindow& window);
+	
 
 private:
+	Player* player;
+	Monster* monster;
+	Weapon* weapon;
+	Font font;
+
+	RectangleShape hpBarBehindPlayer;
+	RectangleShape hpBarInsidePlayer;
+
+	RectangleShape hpBarBehindMonster;
+	RectangleShape hpBarInsideMonster;
+
+	void InitHpBarPlayer();
+	void InitHpBarMonster();
 
 };
+
+
+
+void HUD::InitHpBarPlayer()
+{
+	float height = 20.f;
+	float width = 300.f;
+	float x = 20.f;
+	float y = 20.f;
+
+	this->hpBarBehindPlayer.setSize(Vector2f(width, height));
+	this->hpBarBehindPlayer.setFillColor(Color::Red);
+	this->hpBarBehindPlayer.setPosition(x, y);
+
+	this->hpBarInsidePlayer.setSize(Vector2f(this->player->health * 3, height)); //On récupère la valeur des PV du joueur et on la multiplie par 3 pour avoir la largeur de la barre de PV
+	this->hpBarInsidePlayer.setFillColor(Color::Green);
+	this->hpBarInsidePlayer.setPosition(this->hpBarBehindPlayer.getPosition());
+}
+
+void HUD::InitHpBarMonster()
+{
+	float height = 20.f;
+	float width = 500.f;
+	float x = 705.f;
+	float y = 170.f;
+
+	this->hpBarBehindMonster.setSize(Vector2f(width, height));
+	this->hpBarBehindMonster.setFillColor(Color::Red);
+	this->hpBarBehindMonster.setPosition(x, y);
+
+	this->hpBarInsideMonster.setSize(Vector2f(this->monster->health * 5, height)); //On récupère la valeur des PV du monstre et on la multiplie par 3 pour avoir la largeur de la barre de PV
+	this->hpBarInsideMonster.setFillColor(Color::Cyan);
+	this->hpBarInsideMonster.setPosition(this->hpBarBehindMonster.getPosition());
+}
+
+HUD::HUD(Player* player, Monster* monster, Weapon* weapon, Font font)
+{
+	this->player = player;
+	this->monster = monster;
+	this->weapon = weapon;
+	this->font = font;
+}
+
+void HUD::renderHpBarPlayer(RenderWindow& window)
+{
+	window.draw(this->hpBarBehindPlayer);
+	window.draw(this->hpBarInsidePlayer);
+}
+
+void HUD::renderHpBarMonster(RenderWindow& window)
+{
+	window.draw(this->hpBarBehindMonster);
+	window.draw(this->hpBarInsideMonster);
+}
+
+void HUD::InitHUD(RenderWindow& window) {
+	InitHpBarPlayer();
+	renderHpBarPlayer(window);
+	InitHpBarMonster();
+	renderHpBarMonster(window);
+	//PlayerHealth(player, window, font);
+	PlayerGold(window);
+	//MonsterHealth(window);
+	MonsterName(window);
+	WeaponName(window);
+}
+
+void HUD::PlayerHealth(RenderWindow& window) {
+	Display HealthPlayer;
+
+	string PvPlayer;
+	PvPlayer = "Vie : " + to_string(this->player->health);
+	HealthPlayer.Print(this->font, 30, window, PvPlayer, 20, 0, Color::Green);
+}
+
+void HUD::PlayerGold(RenderWindow& window) {
+	Display GoldPlayer;
+
+	string GPlayer;
+	GPlayer = "Argent : " + to_string(this->player->money);
+	GoldPlayer.Print(this->font, 30, window, GPlayer, 20, 40, Color::Yellow);
+}
+
+void HUD::MonsterHealth(RenderWindow& window) {
+	Display HealthMonster;
+
+	string PvMonster;
+	PvMonster = to_string(this->monster->health);
+	HealthMonster.Print(this->font, 75, window, PvMonster, 910, 100, Color::Red);
+}
+
+void HUD::MonsterName(RenderWindow& window) {
+	Display NameMonster;
+
+	string NMonster;
+	NMonster = this->monster->name;
+	NameMonster.Print(this->font, 75, window, NMonster, 650, 800, Color::Red);
+}
+
+void HUD::MonsterDescription(RenderWindow& window) {
+	Display DescMonster;
+
+	string DescripMonster;
+	DescripMonster = this->monster->desc;
+	DescMonster.Print(this->font, 75, window, DescripMonster, 0, 0, Color::White);
+}
+
+void HUD::WeaponName(RenderWindow& window) {
+	Display NameMonster;
+
+	string NWeapon;
+	NWeapon = this->weapon->name;
+	NameMonster.Print(this->font, 25, window, NWeapon, 1640, 990, Color::White);
+}
