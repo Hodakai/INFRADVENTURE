@@ -37,7 +37,7 @@ int main()
 
 	Weapon* weapon = new Weapon(1, "Epee en carton", 0, .1, "Epée en carton.png");//                                                                               }
 	Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                                                               }---- Création des éléments principaux du jeu 
-	Monster* monster = new Monster(100, "Camrond-America", 'A', "Captain America a mal vecu l'arrivee du nouveau captain, il est devenu enrager !!!", 1, .1); //   }---- avec des pointeurs en début du jeu
+	Monster* monster = new Monster(100, "Camrond-America", "Captain America a mal vecu l'arrivee \n du nouveau captain, il est devenu enrager !!!", 1, .1); //     }---- avec des pointeurs en début du jeu
 	
 	Sprite bossSprite;
 	Sprite weaponSprite;
@@ -92,8 +92,8 @@ int main()
 					}
 
 					HitSprite.setTexture(textureHit);
-					Vector2f truc = { 5.f, 5.f };
-					HitSprite.setPosition(window.mapPixelToCoords(Mouse::getPosition(window)));
+					Vector2f offset(-25.f, -25.f); //On crée un vector qui va corriger l'offset présent sur le png du kitmarker
+					HitSprite.setPosition(window.mapPixelToCoords(Mouse::getPosition(window)) + offset); //On rajoutte le vector que l'on a créé aux coordonées de la souris
 					HitSprite.scale(.1, .1);
 					window.draw(HitSprite);
 			}														

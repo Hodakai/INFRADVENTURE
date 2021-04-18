@@ -211,7 +211,6 @@ public:
 	int health;
 	int healthMax; //Nombre de pv du monstre à la base sans qu'il ait subi d'attaque
 	string name;
-	char abilities;
 	string image;
 	string desc;
 
@@ -220,7 +219,7 @@ public:
 	int atk; //Nombre de dégats que peut infliger l'ennemi au joueur
 	float atkChance; //Pourcntage d'attaque du monstre
 
-	Monster(int health, string name, char abilites, string desc, int atk, float atkChance);
+	Monster(int health, string name, string desc, int atk, float atkChance);
 	~Monster();
 	Sprite CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
 	void GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& window, Font font);
@@ -231,10 +230,9 @@ private:
 
 };
 
-Monster::Monster(int health, string name, char abilities, string desc, int atk, float atkChance) {
+Monster::Monster(int health, string name, string desc, int atk, float atkChance) {
 	this->health = health;
 	this->name = name;
-	this->abilities = abilities;
 	this->desc = desc;
 	this->atk = atk;
 	this->atkChance = atkChance;
@@ -382,9 +380,7 @@ public:
 	void renderHpBarMonster(RenderWindow& window);
 
 	void InitHUD(RenderWindow& window);
-	void PlayerHealth(RenderWindow& window);
 	void PlayerGold(RenderWindow& window);
-	void MonsterHealth(RenderWindow& window);
 	void MonsterName(RenderWindow& window);
 	void MonsterDescription(RenderWindow& window);
 	void WeaponName(RenderWindow& window);
@@ -466,19 +462,10 @@ void HUD::InitHUD(RenderWindow& window) {
 	renderHpBarPlayer(window);
 	InitHpBarMonster();
 	renderHpBarMonster(window);
-	//PlayerHealth(player, window, font);
 	PlayerGold(window);
-	//MonsterHealth(window);
 	MonsterName(window);
+	MonsterDescription(window);
 	WeaponName(window);
-}
-
-void HUD::PlayerHealth(RenderWindow& window) {
-	Display HealthPlayer;
-
-	string PvPlayer;
-	PvPlayer = "Vie : " + to_string(this->player->health);
-	HealthPlayer.Print(this->font, 30, window, PvPlayer, 20, 0, Color::Green);
 }
 
 void HUD::PlayerGold(RenderWindow& window) {
@@ -487,14 +474,6 @@ void HUD::PlayerGold(RenderWindow& window) {
 	string GPlayer;
 	GPlayer = "Argent : " + to_string(this->player->money);
 	GoldPlayer.Print(this->font, 30, window, GPlayer, 20, 40, Color::Yellow);
-}
-
-void HUD::MonsterHealth(RenderWindow& window) {
-	Display HealthMonster;
-
-	string PvMonster;
-	PvMonster = to_string(this->monster->health);
-	HealthMonster.Print(this->font, 75, window, PvMonster, 910, 100, Color::Red);
 }
 
 void HUD::MonsterName(RenderWindow& window) {
