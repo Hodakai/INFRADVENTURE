@@ -222,7 +222,7 @@ public:
 
 	Monster(int health, string name, char abilites, string desc, int atk, float atkChance);
 	~Monster();
-	void CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
+	Sprite CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss); // Comme la fonction print mais avec les sprites
 	void GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& window, Font font);
 	int GetAtk();
 	float GetAtkChance();
@@ -280,7 +280,7 @@ void Monster::GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& win
 }
 
 
-void Monster::CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss) {
+Sprite Monster::CreateSprite(RenderWindow& window, Font font, string img, float x, float y, float Sx, float Sy, Sprite boss) {
 	sf::Texture texture;
 
 	if (!texture.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
@@ -295,6 +295,7 @@ void Monster::CreateSprite(RenderWindow& window, Font font, string img, float x,
 	boss.scale(Sx, Sy);
 
 	window.draw(boss);
+	return boss;
 }
 
 ////////////////////////////////////////////////       CLASSE PLAYER       ////////////////////////////////////////////////
@@ -329,7 +330,6 @@ Player::Player(int money, int moneyPS, int multiplicateur, int health, string na
 
 void Player::GettingDamaged(Monster* monster, GameEvents* Game, RenderWindow& window, Font font) {
 	int probaDmg = rand() % 100; // création de la probabilité de recevoir un coup de la part du monstre
-	cout << probaDmg << endl;
 	int probaAffichageX = rand() % 1000 + 500;
 	int probaAffichageY = rand() % 500 + 200;
 	if (this->health == 0) {

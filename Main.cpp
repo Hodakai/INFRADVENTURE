@@ -73,17 +73,15 @@ int main()
 			HUD HUD;
 			HUD.InitHUD(player, monster, weapon, window, font);
 
-			monster->CreateSprite(window, font, "1stBOSS.png", 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1
+			Sprite boss = monster->CreateSprite(window, font, "1stBOSS.png", 675, 200, 1, 1, bossSprite); //L'appel de la fonction pour créer le sprite du boss 1 que l'on récupère pour la condition d'après
 
-			/*if (bossSprite.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window)))) // ici on check la taille de l'image du boss et on vérifie si la souris est dedans
-			{*/                                                                                             // si elle est dedans et que l'on clique sur la souris, alors -|
-				if (event.type == Event::MouseButtonPressed) {                                            //                                                             |
+			if (boss.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))) && event.type == Event::MouseButtonPressed) // ici on check les bordures de l'image du boss et on vérifie si la souris est dedans
+			{                                                                                             // si elle est dedans et que l'on clique sur la souris, alors -|                   
 					monster->GettingDamaged(weapon, game, window, font); // <--------------------------------------------------------------------------------------------|
-					player->money++;                                                                      // mais ça marche pas encore, je pense qu'il faudrait checker si la souris se trouve
-					player->GettingDamaged(monster, game, window, font);		    					  // dans un rectangle que l'on aurait fait au préalable, comme un cadre autour de l'image
-					Punch.play();
-				}         
-			//}														
+					player->money++;                                                                     
+					player->GettingDamaged(monster, game, window, font);		    					 
+					Punch.play();      
+			}														
 			window.display();
 		}
 	}
