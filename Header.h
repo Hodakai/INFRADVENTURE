@@ -12,6 +12,25 @@
 using namespace std;
 using namespace sf;
 
+void CreateHitSprite(RenderWindow& window, Font font) {
+	Sprite HitSprite;
+	Texture textureHit;
+
+	if (!textureHit.loadFromFile("HitmarkerIMG.png")) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
+
+		cout << "Texture : HitmarkerIMG.png, loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+		system("pause");
+
+	}
+
+	HitSprite.setTexture(textureHit);
+	Vector2f offset(-25.f, -25.f); //On crée un vector qui va corriger l'offset présent sur le png du kitmarker
+	HitSprite.setPosition(window.mapPixelToCoords(Mouse::getPosition(window)) + offset); //On rajoutte le vector que l'on a créé aux coordonées de la souris
+	HitSprite.scale(.1, .1);
+
+	window.draw(HitSprite);
+}
+
 ////////////////////////////////////////////////       CLASSE DISPLAY       ////////////////////////////////////////////////
 
 class Display
@@ -32,104 +51,23 @@ public:
 		window.draw(text);
 	}
 
-	typedef struct DataPrint DataPrint;
+	void CreateSprite(RenderWindow& window, Font font, string img, Sprite Sprite) {
+		Texture texture;
 
-private:
-	string str;
-};
+		if (!texture.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
 
-////////////////////////////////////////////////       CLASSE GAME-EVENTS        ////////////////////////////////////////////////
+			cout << "Texture : " << img << "loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
+			system("pause");
 
+		}
 
-class GameEvents
-{
-public:
-	void Intro(Font font, RenderWindow& window);
-	void Win(Font font, RenderWindow& window);
-	void GameOver(Font font, RenderWindow& window);
-
-private:
-
-};
-
-void GameEvents::Intro(Font font, RenderWindow& window) {
-
-	Display Welcome;
-	string PWelcome = "Welcome to...";
-	Welcome.Print(font, 75, window, PWelcome, 700, 450, Color::White);
-
-	window.display();
-
-	Sleep(2000);
-
-	window.clear();
-
-	Sprite Infradventure;
-
-	Texture texture;
-
-	if (!texture.loadFromFile("Infradventure.png")) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
-
-		cout << "Texture : Infradventure.png -> loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
-		system("pause");
-
+		Sprite.setTexture(texture);
+		window.draw(Sprite);
 	}
 
-	Infradventure.setTexture(texture);
-	window.draw(Infradventure);
-	window.display();
+private:
 
-}
-
-void GameEvents::Win(Font font, RenderWindow& window) {
-
-	window.clear();
-
-	Display Win;
-	string PWin = "Vous avez gagné face au premier boss !!! Bravo !!!";
-	Win.Print(font, 20, window, PWin, 800, 500, Color::White);
-
-	window.display();
-
-	Sleep(2000);
-
-	window.clear();
-
-	Display End;
-	string PEnd = "Merci d'avoir joué !!!";
-	End.Print(font, 20, window, PEnd, 800, 500, Color::White);
-
-	window.display();
-
-	Sleep(5000);
-
-	window.close();
-}
-
-void GameEvents::GameOver(Font font, RenderWindow& window) {
-
-	window.clear();
-
-	Display Loose;
-	string PLoose = "Vous avez perdu !!!";
-	Loose.Print(font, 50, window, PLoose, 800, 500, Color::White);
-
-	window.display();
-
-	Sleep(2000);
-
-	window.clear();
-
-	Display End;
-	string PEnd = "Merci d'avoir joué !!!";
-	End.Print(font, 20, window, PEnd, 800, 500, Color::White);
-
-	window.display();
-
-	Sleep(5000);
-
-	window.close();
-}
+};
 
 // J'ai fait une fonction pour le message de resize de la window ;) 
 void resized(RenderWindow& window, Font font) {
@@ -141,6 +79,114 @@ void resized(RenderWindow& window, Font font) {
 	window.display();
 	Sleep(3000);
 
+}
+
+////////////////////////////////////////////////       CLASSE GAME-EVENTS        ////////////////////////////////////////////////
+
+class GameEvents
+{
+public:
+	void WinFirstBoss(Font font, RenderWindow& window);
+	void GameOver(Font font, RenderWindow& window);
+	void Intro(Font font, RenderWindow& window);
+
+private:
+
+};
+
+void GameEvents::WinFirstBoss(Font font, RenderWindow& window) {
+
+	window.clear();
+
+	Display Win;
+	string PWin = "Vous avez gagné face au premier boss !!! Bravo !!!";
+	Win.Print(font, 50, window, PWin, 400, 500, Color::White);
+
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Display End;
+	string PEnd = "Maintenant direction le 2e boss !!!";
+	End.Print(font, 50, window, PEnd, 600, 500, Color::White);
+
+	window.display();
+
+	Sleep(2000);
+}
+
+void GameEvents::GameOver(Font font, RenderWindow& window) {
+
+	window.clear();
+
+	Display Loose;
+	string PLoose = "Vous avez perdu !!!";
+	Loose.Print(font, 50, window, PLoose, 700, 500, Color::White);
+
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Display End;
+	string PEnd = "Merci d'avoir joué !!!";
+	End.Print(font, 50, window, PEnd, 700, 500, Color::White);
+
+	window.display();
+
+	Sleep(5000);
+
+	window.close();
+}
+
+void GameEvents::Intro(Font font, RenderWindow& window) {
+	window.clear();
+
+	Sprite Intro1;
+	Display dispIntro1;
+	dispIntro1.CreateSprite(window, font, "Intro1.png", Intro1);
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Sprite Intro2;
+	Display dispIntro2;
+	dispIntro2.CreateSprite(window, font, "Intro2.png", Intro2);
+	window.display();
+
+	Sleep(4000);
+
+	window.clear();
+
+	Sprite Intro3;
+	Display dispIntro3;
+	dispIntro3.CreateSprite(window, font, "Intro3.png", Intro3);
+	window.display();
+
+	Sleep(2000);
+
+	window.clear();
+
+	Sprite Intro4;
+	Display dispIntro4;
+	dispIntro4.CreateSprite(window, font, "Intro4.png", Intro4);
+	window.display();
+
+	Sleep(3000);
+
+	window.clear();
+
+	Sprite Intro5;
+	Display dispIntro5;
+	dispIntro5.CreateSprite(window, font, "Intro5.png", Intro5);
+	window.display();
+
+	Sleep(2000);
 }
 
 ////////////////////////////////////////////////       CLASSE WEAPON       ////////////////////////////////////////////////
@@ -155,9 +201,7 @@ public:
 	float crit; // Variable qui va définir le pourcentage de coup critique infigés à l'ennemi (entre 0 et 1)
 
 	Weapon(int dmg, string name, int cost, float crit, string img);
-	void CreateSprite(RenderWindow& window, Font font, string img, int nbBoss, float x, float y, float Sx, float Sy, Sprite boss);
 	string GetWeaponName();
-	string GetWeaponImg();
 	float GetWeaponCrit();
 
 private:
@@ -177,29 +221,8 @@ string Weapon::GetWeaponName() {
 	return name;
 }
 
-string Weapon::GetWeaponImg() {
-	return img;
-}
-
 float Weapon::GetWeaponCrit() {
 	return crit;
-}
-
-void Weapon::CreateSprite(RenderWindow& window, Font font, string img, int nbWeapon, float x, float y, float Sx, float Sy, Sprite weaponSprite) {
-	sf::Texture textureWeapon;
-
-	if (!textureWeapon.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
-
-		cout << "Texture : " << img << "loading failed..." << endl; // Message d'erreur dans les logs si une texture ne load pas ^^
-		system("pause");
-
-	}
-
-	weaponSprite.setTexture(textureWeapon);
-	weaponSprite.setPosition(x, y);
-	weaponSprite.scale(Sx, Sy);
-
-	window.draw(weaponSprite);
 }
 
 ////////////////////////////////////////////////       CLASSE MONSTER       ////////////////////////////////////////////////
@@ -225,6 +248,7 @@ public:
 	void GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& window, Font font);
 	int GetAtk();
 	float GetAtkChance();
+	void SetMonster(int health, string name, string desc, int atk, float atkChance);
 
 private:
 
@@ -252,28 +276,23 @@ float Monster::GetAtkChance() {
 	return this->atkChance;
 }
 
+void Monster::SetMonster(int health, string name, string desc, int atk, float atkChance)
+{
+	this->health = health;
+	this->name = name;
+	this->desc = desc;
+	this->atk = atk;
+	this->atkChance = atkChance;
+	this->healthMax = health;
+}
+
 void Monster::GettingDamaged(Weapon* weapon, GameEvents* Game, RenderWindow& window, Font font) {
 	int probaCrit = rand() % 100; // création de la probabilité d'infliger un coup critique
-	if (this->health == 0) {
-		Game->Win(font, window);
-	}
-	else if (weapon->GetWeaponCrit() * 100 > probaCrit) {
+	if (weapon->GetWeaponCrit() * 100 > probaCrit) {
 		this->health -= weapon->dmgEvryClic * 2; // si le pourcentage est en dessous de celui de l'arme alors les dégats infligés sont multipliés par 2
-		Display Critical;
-		string Crit;
-		Crit = "Critique ! " + to_string(weapon->dmgEvryClic * 2);
-		int probaAffichageX = rand() % 1000 + 500;
-		int probaAffichageY = rand() % 500 + 200;
-		Critical.Print(font, 100, window, Crit, probaAffichageX, probaAffichageY, Color::Red);
 	}
 	else {
 		this->health -= weapon->dmgEvryClic;
-		Display Critical;
-		string Crit;
-		Crit = to_string(weapon->dmgEvryClic);
-		int probaAffichageX = rand() % 1000 + 500;
-		int probaAffichageY = rand() % 500 + 200;
-		Critical.Print(font, 75, window, Crit, probaAffichageX, probaAffichageY, Color::Red);
 	}
 }
 
@@ -291,7 +310,7 @@ Sprite Monster::CreateSprite(RenderWindow& window, Font font, string img, float 
 	boss.setTexture(texture);
 	boss.setPosition(x, y);
 	boss.scale(Sx, Sy);
-
+	
 	window.draw(boss);
 	return boss;
 }
@@ -330,7 +349,7 @@ void Player::GettingDamaged(Monster* monster, GameEvents* Game, RenderWindow& wi
 	int probaDmg = rand() % 100; // création de la probabilité de recevoir un coup de la part du monstre
 	int probaAffichageX = rand() % 1000 + 500;
 	int probaAffichageY = rand() % 500 + 200;
-	if (this->health == 0) {
+	if (this->health < 1) {
 		Game->GameOver(font, window);
 	}
 	else if (monster->GetAtkChance() * 100 > probaDmg) {
@@ -344,24 +363,12 @@ void Player::GettingDamaged(Monster* monster, GameEvents* Game, RenderWindow& wi
 	}
 	else if (monster->GetAtkChance() * 100 + 25 > probaDmg && monster->health < .1 * monster->healthMax) {
 		this->health -= monster->GetAtk() * 2.5;
-		Display EnragedAktMonster;
-		string EAMonster;
-		EAMonster = "BOOOOM !!!";
-		EnragedAktMonster.Print(font, 100, window, EAMonster, probaAffichageX, probaAffichageY, Color::Magenta);
 	}
 	else if (monster->GetAtkChance() * 100 + 10 > probaDmg && monster->health < .25 * monster->healthMax) {
 		this->health -= monster->GetAtk() * 2;
-		Display EnragedAktMonster;
-		string EAMonster;
-		EAMonster = "RAHHHH !!!";
-		EnragedAktMonster.Print(font, 100, window, EAMonster, probaAffichageX, probaAffichageY, Color::Green);
 	}
 	else if (monster->GetAtkChance() * 100 + 5 > probaDmg && monster->health < .5 * monster->healthMax) {
 		this->health -= monster->GetAtk() * 1.5;
-		Display SuperAktMonster;
-		string SAMonster;
-		SAMonster = "Grrrrr !!!";
-		SuperAktMonster.Print(font, 100, window, SAMonster, probaAffichageX, probaAffichageY, Color::Cyan);
 	}
 }
 
@@ -378,12 +385,14 @@ public:
 
 	void renderHpBarPlayer(RenderWindow& window);
 	void renderHpBarMonster(RenderWindow& window);
+	void renderBarLore(RenderWindow& window);
 
-	void InitHUD(RenderWindow& window);
+	void InitHUD(RenderWindow& window, int nameX);
 	void PlayerGold(RenderWindow& window);
-	void MonsterName(RenderWindow& window);
+	void MonsterName(RenderWindow& window, int nameX);
+	void Lore(RenderWindow& window);
 	void MonsterDescription(RenderWindow& window);
-	void WeaponName(RenderWindow& window);
+	void MonsterStats(RenderWindow& window);
 	
 
 private:
@@ -398,12 +407,25 @@ private:
 	RectangleShape hpBarBehindMonster;
 	RectangleShape hpBarInsideMonster;
 
+	RectangleShape BarLore;
+
+	void InitBarLore();
 	void InitHpBarPlayer();
 	void InitHpBarMonster();
 
 };
 
+void HUD::InitBarLore()
+{
+	float height = 500.f;
+	float width = 300.f;
+	float x = 275.f;
+	float y = 300.f;
 
+	this->BarLore.setSize(Vector2f(width, height));
+	this->BarLore.setFillColor(Color(123, 122, 122, 150));
+	this->BarLore.setPosition(x, y);
+}
 
 void HUD::InitHpBarPlayer()
 {
@@ -425,8 +447,8 @@ void HUD::InitHpBarMonster()
 {
 	float height = 20.f;
 	float width = 500.f;
-	float x = 705.f;
-	float y = 170.f;
+	float x = 700.f;
+	float y = 850.f; 
 
 	this->hpBarBehindMonster.setSize(Vector2f(width, height));
 	this->hpBarBehindMonster.setFillColor(Color::Red);
@@ -457,18 +479,28 @@ void HUD::renderHpBarMonster(RenderWindow& window)
 	window.draw(this->hpBarInsideMonster);
 }
 
-void HUD::InitHUD(RenderWindow& window) {
+void HUD::renderBarLore(RenderWindow& window) 
+{
+	window.draw(this->BarLore);
+}
+
+void HUD::InitHUD(RenderWindow& window, int nameX) 
+{
+	InitBarLore();
+	renderBarLore(window);
 	InitHpBarPlayer();
 	renderHpBarPlayer(window);
 	InitHpBarMonster();
 	renderHpBarMonster(window);
 	PlayerGold(window);
-	MonsterName(window);
+	MonsterName(window, nameX);
+	Lore(window);
 	MonsterDescription(window);
-	WeaponName(window);
+	MonsterStats(window);
 }
 
-void HUD::PlayerGold(RenderWindow& window) {
+void HUD::PlayerGold(RenderWindow& window) 
+{
 	Display GoldPlayer;
 
 	string GPlayer;
@@ -476,26 +508,40 @@ void HUD::PlayerGold(RenderWindow& window) {
 	GoldPlayer.Print(this->font, 30, window, GPlayer, 20, 40, Color::Yellow);
 }
 
-void HUD::MonsterName(RenderWindow& window) {
+void HUD::MonsterName(RenderWindow& window, int nameX) 
+{
 	Display NameMonster;
 
 	string NMonster;
 	NMonster = this->monster->name;
-	NameMonster.Print(this->font, 75, window, NMonster, 650, 800, Color::Red);
+	NameMonster.Print(this->font, 75, window, NMonster, nameX, 125.f, Color::Red);
 }
 
-void HUD::MonsterDescription(RenderWindow& window) {
+void HUD::Lore(RenderWindow& window) 
+{
+	Display LoreMonster;
+
+	string Lore;
+	Lore = "Histoire du monstre :";
+	LoreMonster.Print(this->font, 20, window, Lore, 300, 325, Color::White);
+}
+
+void HUD::MonsterDescription(RenderWindow& window) 
+{
 	Display DescMonster;
 
 	string DescripMonster;
 	DescripMonster = this->monster->desc;
-	DescMonster.Print(this->font, 75, window, DescripMonster, 0, 0, Color::White);
+	DescMonster.Print(this->font, 20, window, DescripMonster, 300, 375, Color::White);
 }
 
-void HUD::WeaponName(RenderWindow& window) {
-	Display NameMonster;
+void HUD::MonsterStats(RenderWindow& window)
+{
+	Display StatsMonster;
 
-	string NWeapon;
-	NWeapon = this->weapon->name;
-	NameMonster.Print(this->font, 25, window, NWeapon, 1640, 990, Color::White);
+	string Stats;
+	int atkChanceInt = this->monster->atkChance * 100;
+	Stats = "Stats du monstre :\n\nAtk : " + to_string(this->monster->atk) + " damage points" + "\nChance d'attaquer : " + to_string(atkChanceInt) 
+		+ "%" + "\nNombre de PV : " + to_string(this->monster->healthMax) + " PV\n\nAttention ! Il peut faire\ndes attaques spéciales\nquand il a peu de vie !";
+	StatsMonster.Print(this->font, 20, window, Stats, 300, 575, Color::White);
 }
