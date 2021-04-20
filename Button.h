@@ -32,6 +32,10 @@ public:
 		this->text.setFillColor(color);
 	}
 
+	void setText(string txt) {
+		this->text.setString(txt);
+	}
+
 	void setPosition(Vector2f pos) {
 		this->button.setPosition(pos);
 
@@ -65,6 +69,5 @@ private:
 	RectangleShape button;
 	Text text;
 	Font arial;
-	
 };
 
