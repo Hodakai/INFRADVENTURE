@@ -51,7 +51,7 @@ public:
 		window.draw(text);
 	}
 
-	void CreateSprite(RenderWindow& window, Font font, string img, Sprite Sprite) {
+	void CreateSprite(RenderWindow& window, Font font, string img, Sprite Sprite, float Sx, float Sy) {
 		Texture texture;
 
 		if (!texture.loadFromFile(img)) { // L'img ici c'est la string du nom de l'image qui doit être dans ton dossier comme la font ;) 
@@ -62,6 +62,7 @@ public:
 		}
 
 		Sprite.setTexture(texture);
+		Sprite.setScale(Sx, Sy);
 		window.draw(Sprite);
 	}
 
@@ -74,7 +75,7 @@ void resized(RenderWindow& window, Font font) {
 
 	window.clear();
 	Display warningResize;
-	string WarnRstr = "Attention ! Vous avez redimentionne la fenetre, cela peut affecter l'affichage de certains elements !";
+	string WarnRstr = "Attention ! Vous avez redimentionne la fenetre, cela peut affecter l'affichage et le fonctionnement de certains elements !";
 	warningResize.Print(font, 20, window, WarnRstr, 500, 500, Color::White);
 	window.display();
 	Sleep(3000);
@@ -87,6 +88,9 @@ class GameEvents
 {
 public:
 	void WinFirstBoss(Font font, RenderWindow& window);
+	void WinSecondBoss(Font font, RenderWindow& window);
+	void WinThirdBoss(Font font, RenderWindow& window);
+	void Ending(Font font, RenderWindow& window);
 	void GameOver(Font font, RenderWindow& window);
 	void Intro(Font font, RenderWindow& window);
 
@@ -98,23 +102,59 @@ void GameEvents::WinFirstBoss(Font font, RenderWindow& window) {
 
 	window.clear();
 
-	Display Win;
-	string PWin = "Vous avez gagné face au premier boss !!! Bravo !!!";
-	Win.Print(font, 50, window, PWin, 400, 500, Color::White);
-
+	Sprite Transition1;
+	Display dispTrans1;
+	dispTrans1.CreateSprite(window, font, "TransitionBOSS2.png", Transition1, 1.40, 1.40);
 	window.display();
 
-	Sleep(2000);
+	Sleep(6000);
+}
+
+void GameEvents::WinSecondBoss(Font font, RenderWindow& window) {
 
 	window.clear();
 
-	Display End;
-	string PEnd = "Maintenant direction le 2e boss !!!";
-	End.Print(font, 50, window, PEnd, 600, 500, Color::White);
-
+	Sprite Transition2;
+	Display dispTrans2;
+	dispTrans2.CreateSprite(window, font, "TransitionBOSS3.png", Transition2, 1.40, 1.40);
 	window.display();
 
-	Sleep(2000);
+	Sleep(6000);
+}
+
+void GameEvents::WinThirdBoss(Font font, RenderWindow& window) {
+
+	window.clear();
+
+	Sprite Transition3;
+	Display dispTrans3;
+	dispTrans3.CreateSprite(window, font, "TransitionBOSS4.png", Transition3, 1.40, 1.40);
+	window.display();
+
+	Sleep(6000);
+}
+
+void GameEvents::Ending(Font font, RenderWindow& window) {
+
+	window.clear();
+
+	Sprite Transition4;
+	Display dispTrans4;
+	dispTrans4.CreateSprite(window, font, "TransitionBOSS5.png", Transition4, 1, 1);
+	window.display();
+
+	Sleep(6000);
+
+	window.clear();
+
+	Sprite Transition5;
+	Display dispTrans5;
+	dispTrans5.CreateSprite(window, font, "TransitionBOSS6.png", Transition5, 1, 1);
+	window.display();
+
+	Sleep(6000);
+
+	window.close();
 }
 
 void GameEvents::GameOver(Font font, RenderWindow& window) {
@@ -147,7 +187,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 
 	Sprite Intro1;
 	Display dispIntro1;
-	dispIntro1.CreateSprite(window, font, "Intro1.png", Intro1);
+	dispIntro1.CreateSprite(window, font, "Intro1.png", Intro1, 1, 1);
 	window.display();
 
 	Sleep(2000);
@@ -156,7 +196,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 
 	Sprite Intro2;
 	Display dispIntro2;
-	dispIntro2.CreateSprite(window, font, "Intro2.png", Intro2);
+	dispIntro2.CreateSprite(window, font, "Intro2.png", Intro2, 1, 1);
 	window.display();
 
 	Sleep(4000);
@@ -165,7 +205,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 
 	Sprite Intro3;
 	Display dispIntro3;
-	dispIntro3.CreateSprite(window, font, "Intro3.png", Intro3);
+	dispIntro3.CreateSprite(window, font, "Intro3.png", Intro3, 1, 1);
 	window.display();
 
 	Sleep(2000);
@@ -174,7 +214,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 
 	Sprite Intro4;
 	Display dispIntro4;
-	dispIntro4.CreateSprite(window, font, "Intro4.png", Intro4);
+	dispIntro4.CreateSprite(window, font, "Intro4.png", Intro4, 1, 1);
 	window.display();
 
 	Sleep(3000);
@@ -183,7 +223,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 
 	Sprite Intro5;
 	Display dispIntro5;
-	dispIntro5.CreateSprite(window, font, "Intro5.png", Intro5);
+	dispIntro5.CreateSprite(window, font, "Intro5.png", Intro5, 1, 1);
 	window.display();
 
 	Sleep(2000);

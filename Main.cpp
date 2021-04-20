@@ -83,13 +83,12 @@ int main()
 
 				CreateHitSprite(window, font); // Fonction pour créer un sprite pour chaque clic de souris du joueur afin qu'il soit sur la souris a chaque fois
 
-				if (monster->health < 1) // Condition pour 
+				if (monster->health < 1)
 				{
 					nbMonsterDeafeated++;
 					if (nbMonsterDeafeated == 1) {
-						window.clear();
 						game->WinFirstBoss(font, window);
-						monster->SetMonster(100, "Infra-Knight", "Infra-Knight, le frère\nmaléfique de Meca-Doom\nveut protéger son\nfrère machiavélique !!!\n\nPoint faible :\nIl reste humain à\nl'interieur...", 5, .3);
+						monster->SetMonster(2, "Infra-Knight", "Infra-Knight, le frère\nmaléfique de Meca-Doom\nveut protéger son\nfrère machiavélique !!!\n\nPoint faible :\nIl reste humain à\nl'interieur...", 5, .3);
 						monsterImg = "2ndBOSS.png";
 						nameX = 750.f;
 						bossX = 625;
@@ -98,19 +97,26 @@ int main()
 						bossSY = 1;
 					}
 					else if (nbMonsterDeafeated == 2) {
-						monster->SetMonster(100, "Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
+						game->WinSecondBoss(font, window);
+						monster->SetMonster(2, "Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
 						monsterImg = "3rdBOSS.png";
 						bossX = 500;
 						bossY = 200;
 					}
 					else if (nbMonsterDeafeated == 3) {
-						monster->SetMonster(100, "Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
+						game->WinThirdBoss(font, window);
+						monster->SetMonster(2, "Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
 						monsterImg = "4thBOSS.png";
 						nameX = 650.f;
 						bossX = 450;
 						bossY = 340;
 						bossSX = 2;
 						bossSY = 2;
+					}
+					else if (nbMonsterDeafeated == 4) {
+						game->Ending(font, window);
+						//free();
+						//Retour menu principal ou window.close()
 					}
 				}
 			}
