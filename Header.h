@@ -223,7 +223,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 class Spell
 {
 public:
-	Spell(string nameOfSpell, int damage, int levelOfSpell, int FullCritDuration, int maxLvlofSpell, int ultimateDuration, int CooldownSpell, int costOfSpell)
+	Spell(string nameOfSpell, int idSpell ,int damage, int levelOfSpell, int FullCritDuration, int maxLvlofSpell, int ultimateDuration, int CooldownSpell, int costOfSpell)
 	{
 		this->name = nameOfSpell;
 		this->dmg = damage;
@@ -234,6 +234,7 @@ public:
 		this->UltimateTime = ultimateDuration;
 		this->cooldown = CooldownSpell;
 		this->cost = costOfSpell;
+		this->idSpells = idSpell;
 	}
 
 	
@@ -250,6 +251,7 @@ public:
 	string name;
 	int fullCritTime;
 	int UltimateTime;
+	int idSpells;
 	
 private:
 	
@@ -275,26 +277,26 @@ int Spell::getCost() {
 
 void  Spell::LvlUpSpell(int money) {
 	cout << "name : " << this->name << "\nlvl : " << this->lvl << "Cost : " << this->cost << endl;
-	if (this->name == "SunFire" && money >= this->cost && this->lvl < this->maxLvl) {
+	if (this->idSpells == 1 && money >= this->cost && this->lvl < this->maxLvl) {
 		this->dmg += 50;
 		this->lvl++;	
 		this->verifAchat = 1;
 		cout << " Sunfire lvl up, now lvl : " << this->lvl <<" \nand deal : "<< this->dmg <<" damage" <<endl;
 	}
-	else if (this->name == "Heal" && money >= this->cost && this->lvl < this->maxLvl) {
+	else if (this->idSpells == 2 && money >= this->cost && this->lvl < this->maxLvl) {
 		this->cooldown -= 5;
 		this->lvl++;
 		this->verifAchat = 1;
 
 	}
 
-	else if (this->name == "Fullcrit" && money >= this->cost && this->lvl < this->maxLvl) {
+	else if (this->idSpells == 3 && money >= this->cost && this->lvl < this->maxLvl) {
 		this->fullCritTime += 5;
 		this->lvl++;
 		this->verifAchat = 1;
 	
 	}
-	else if (this->name == "Ultimate" && money >= this->cost && this->lvl < this->maxLvl)
+	else if (this->idSpells == 4 && money >= this->cost && this->lvl < this->maxLvl)
 	{
 		this->lvl++;
 		this->UltimateTime += 5;	
@@ -565,7 +567,8 @@ public:
 	void renderHpBarMonster(RenderWindow& window);
 	void renderBarLore(RenderWindow& window);
 
-	void InitHUD(RenderWindow& window, int nameX);
+	void InitHUD(RenderWindow& window, int nameX, int spellAlvl, int spellZlvl, int spellElvl, int spellRlvl);
+	void RenderSpellGui(RenderWindow& window, int spellAlvl, int spellZlvl, int spellElvl, int spellRlvl);
 	void PlayerGold(RenderWindow& window);
 	void MonsterName(RenderWindow& window, int nameX);
 	void Lore(RenderWindow& window);
@@ -576,6 +579,7 @@ private:
 	Player* player;
 	Monster* monster;
 	Weapon* weapon;
+	Spell* spell;
 	Font font;
 
 	RectangleShape hpBarBehindPlayer;
@@ -635,8 +639,10 @@ void HUD::renderHpBarMonster(RenderWindow& window)
 	window.draw(this->hpBarInsideMonster);
 }
 
-void HUD::InitHUD(RenderWindow& window,int nameX) {	
+void HUD::InitHUD(RenderWindow& window,int nameX, int spellAlvl, int spellZlvl, int spellElvl, int spellRlvl) {
+
 	renderBarLore(window);
+	RenderSpellGui(window ,spellAlvl, spellZlvl, spellElvl, spellRlvl);
 	renderHpBarPlayer(window);
 	renderHpBarMonster(window);
 	PlayerGold(window);
@@ -645,6 +651,41 @@ void HUD::InitHUD(RenderWindow& window,int nameX) {
 	MonsterDescription(window);
 	MonsterStats(window);	
 }
+
+void HUD::RenderSpellGui(RenderWindow& window, int spellAlvl, int spellZlvl, int spellElvl, int spellRlvl)
+{
+
+		Display SpellA;
+		string spellAhud;
+		spellAhud = "Lvl : " + to_string(spellAlvl) + "\ncost lvl up [100/140/180/220/260] ";
+		SpellA.Print(this->font, 10, window, spellAhud, 1620, 425, Color::White);
+
+
+		Display SpellZ;
+		string spellZhud;
+		spellZhud = "Lvl : " + to_string(spellZlvl) + "\ncost lvl up [50/75/100/125/150] " ;
+		SpellZ.Print(this->font, 10, window, spellZhud, 1370, 425, Color::White);
+
+
+		Display SpellE;
+		string spellEhud;
+		spellEhud = "Lvl : " + to_string(spellElvl) + "\ncost lvl up [100/200/300/400/500] ";
+		SpellE.Print(this->font, 10, window, spellEhud, 1370, 525, Color::White);
+
+		Display SpellR;
+		string spellRhud;
+		spellRhud = "Lvl : " + to_string(spellRlvl) + "\ncost lvl up [1000]" ;
+		SpellR.Print(this->font, 10, window, spellRhud, 1620, 525, Color::White);
+
+		Display Arme;
+		string arme;
+		arme = "Lvl : " + to_string(this->weapon->lvl) + "\ncost lvl up [125/225/325/425]";
+		Arme.Print(this->font, 10, window, arme, 1370, 625, Color::White);
+
+	
+
+}
+
 
 void HUD::MonsterName(RenderWindow& window, int nameX)
 {

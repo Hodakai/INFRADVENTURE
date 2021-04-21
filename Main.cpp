@@ -10,7 +10,7 @@ void Tuto(RenderWindow& window) {
     Sprite sprite_tuto;
    
 
-    if (!tuto.loadFromFile("InfradventureEZ.png"))
+    if (!tuto.loadFromFile("Tuto.png"))
     {
         std::cout << "Erreur de chargement du Tuto" << std::endl;
     }
@@ -20,7 +20,7 @@ void Tuto(RenderWindow& window) {
     arial.loadFromFile("arial.ttf");
 
     Button btnQuit2("      Quit", { 200, 50 }, 20, Color::Cyan, Color::Black);
-    btnQuit2.setPosition({ 20, 900 });
+    btnQuit2.setPosition({ 20, 1000 });
     btnQuit2.setFont(arial);
     
 
@@ -63,11 +63,21 @@ void Tuto(RenderWindow& window) {
 
 
 void Game(RenderWindow& window, Font font) {
-    Music theme;
-    if (!theme.openFromFile("Avengers.ogg")) {
+    Music Theme;
+    string theme = "HarryPotter.ogg";
+    if (!Theme.openFromFile(theme)) {
         cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
     }
-    theme.setVolume(1);
+    Theme.setVolume(1);
+   
+    SoundBuffer Sheesh;
+    if (!Sheesh.loadFromFile("Hitmarker.ogg")) {
+        cout << "Could not load Punch sound..." << endl; //Open le fichier du son d'attaque pour le mettre dans le buffer
+    }
+
+    Sound sheesh;
+    sheesh.setBuffer(Sheesh); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
+    sheesh.setVolume(5);
 
     SoundBuffer bufferPunch;
     if (!bufferPunch.loadFromFile("Hitmarker.ogg")) {
@@ -76,7 +86,7 @@ void Game(RenderWindow& window, Font font) {
 
     Sound Hit;
     Hit.setBuffer(bufferPunch); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
-    Hit.setVolume(4);
+    Hit.setVolume(1);
 
     SoundBuffer Sunfire;
     if (!Sunfire.loadFromFile("Sunfire.ogg")) {
@@ -85,7 +95,7 @@ void Game(RenderWindow& window, Font font) {
 
     Sound pkfire;
     pkfire.setBuffer(Sunfire); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
-    pkfire.setVolume(15);
+    pkfire.setVolume(20);
 
     SoundBuffer Heal;
     if (!Heal.loadFromFile("HealSound.ogg")) {
@@ -94,7 +104,7 @@ void Game(RenderWindow& window, Font font) {
 
     Sound heal;
     heal.setBuffer(Heal); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
-    heal.setVolume(10);
+    heal.setVolume(8);
 
     SoundBuffer Fullcrit;
     if (!Fullcrit.loadFromFile("Fullcrit.ogg")) {
@@ -146,18 +156,20 @@ void Game(RenderWindow& window, Font font) {
     HitSprite.scale(.1, .1);
     */
     Weapon* weapon = new Weapon(1, "Epee en carton", 125, .1, 1, 5);//            
-    Player* player = new Player(100, 1, 1, 100, "Hodaka", weapon);//                                                       }---- Création des éléments principaux du jeu 
+    Player* player = new Player(10000, 1, 1, 100, "Hodaka", weapon);//                                                       }---- Création des éléments principaux du jeu 
     Monster* monster = new Monster(1000, .5,"Meca-Bot", "Meca-Bot est l'un des sbires\ndu tristement célèbre Meca-\nDoom il faut le mettre hors\nservice afin de pouvoir\nesperer acceder à\nMeca-Doom", 1, .1); // }
 
-    Spell* spellA = new Spell("SunFire", 0, 0, 0, 5, 0, 20, 100);
-    Spell* spellZ = new Spell("Heal", 0, 0, 0, 5, 0, 30, 50);
-    Spell* spellE = new Spell("Fullcrit", 0, 0, 5, 5, 0, 60, 100);
-    Spell* spellR = new Spell("Ultimate", 0, 0, 0, 1, 5, 300, 1000);
+    Spell* spellA = new Spell("SunFire", 1,0, 0, 0, 5, 0, 20, 100);
+    Spell* spellZ = new Spell("Heal", 2,0, 0, 0, 5, 0, 30, 50);
+    Spell* spellE = new Spell("Fullcrit", 3,0, 0, 5, 5, 0, 60, 100);
+    Spell* spellR = new Spell("Ultimate", 4,0, 0, 0, 1, 5, 300, 1000);
     HUD* GUI = new HUD(player, monster, weapon, font);
     GameEvents* game = new GameEvents;
 
     Sprite bossSprite;
     string monsterImg = "1stBOSS.png";
+
+
 
     Button btnAmeliorationSpellA("SunFire[0]", { 200, 50 }, 20, Color::Red, Color::White);
     btnAmeliorationSpellA.setPosition({ 1620, 400 });
@@ -190,14 +202,15 @@ void Game(RenderWindow& window, Font font) {
     int CountClickE = 60;
     int CountClickR = 300;
 
-    int nameX = 800.f;
+    int nameX = 800;
     int nbMonsterDeafeated = 0; // Ici on initialise une variable qui va nous servir à savoir le nombre de boss batus au cours de la partie
     int bossX, bossY, bossSX, bossSY; // Variables pour la position de l'image du premier monstre pour pouvoir y acceder facilement
     bossX = 650;
     bossY = 200;
     bossSX = 3;
     bossSY = 3;
-    theme.play();
+    Theme.play();
+    Theme.setLoop(1);
     while (window.isOpen())
     {
         Event event;
@@ -216,7 +229,7 @@ void Game(RenderWindow& window, Font font) {
             btnAmeliorationSpellR.Draw(window);
             btnAmeliorationArme.Draw(window);
 
-            GUI->InitHUD(window, nameX); // Lancement de la fonction qui va se charger d'afficher tout le menu dans le jeu
+            GUI->InitHUD(window, nameX ,spellA->getlvl(),spellZ->getlvl(), spellE->getlvl(), spellR->getlvl()) ; // Lancement de la fonction qui va se charger d'afficher tout le menu dans le jeu
 
             Sprite MonsterBoss = monster->CreateSprite(window, font, monsterImg, bossX, bossY, bossSX, bossSY, bossSprite); // Création et affichage du sprite du monstre
 
@@ -236,9 +249,16 @@ void Game(RenderWindow& window, Font font) {
                 {
                     nbMonsterDeafeated++;
                     if (nbMonsterDeafeated == 1) {
+                        theme = "DBZ_Vegeta.ogg";
+                        Theme.setLoop(0);
+                        Theme.stop();
+                        if (!Theme.openFromFile(theme)) {
+                            cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                        }                       
                         game->WinFirstBoss(font, window);
+                        Theme.play();
                         monster->SetMonster(2, 250, "Infra-Knight", "Infra-Knight, le frère\nmaléfique de Meca-Doom\nveut protéger son\nfrère machiavélique !!!\n\nPoint faible :\nIl reste humain à\nl'interieur...", 5, .3);
-                        monsterImg = "2ndBOSS.png";
+                        monsterImg = "2ndBOSS.png";                        
                         nameX = 750.f;
                         bossX = 625;
                         bossY = 250;
@@ -246,23 +266,43 @@ void Game(RenderWindow& window, Font font) {
                         bossSY = 1;
                     }
                     else if (nbMonsterDeafeated == 2) {
+                        theme = "Sasageyo.ogg";
+                        Theme.setLoop(0);
+                        Theme.stop();
+                        if (!Theme.openFromFile(theme)) {
+                            cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                        }
                         game->WinSecondBoss(font, window);
+                        Theme.play();
+
                         monster->SetMonster(2, 250, "Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
                         monsterImg = "3rdBOSS.png";
+                        
                         bossX = 500;
                         bossY = 200;
                     }
                     else if (nbMonsterDeafeated == 3) {
+                        theme = "Metal-Gear-Solid.ogg";
+                        Theme.setLoop(0);
+                        Theme.stop();
+                        if (!Theme.openFromFile(theme)) {
+                            cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                        }
                         game->WinThirdBoss(font, window);
+                        Theme.play();
+
                         monster->SetMonster(2, 250, "Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
-                        monsterImg = "4thBOSS.png";
+                        monsterImg = "4thBOSS.png";                       
                         nameX = 650.f;
-                        bossX = 450;
-                        bossY = 340;
-                        bossSX = 2;
-                        bossSY = 2;
+                        bossX = 700;
+                        bossY = 440;
+                        bossSX = 1;
+                        bossSY = 1;
                     }
                     else if (nbMonsterDeafeated == 4) {
+                        Theme.setLoop(0);
+                        Theme.stop();
+                        sheesh.play();
                         game->Ending(font, window);
                         //free();
                         window.close();
@@ -282,7 +322,14 @@ void Game(RenderWindow& window, Font font) {
                     {
                         nbMonsterDeafeated++;
                         if (nbMonsterDeafeated == 1) {
+                            theme = "DBZ_Vegeta.ogg";
+                            Theme.setLoop(0);
+                            Theme.stop();
+                            if (!Theme.openFromFile(theme)) {
+                                cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                            }
                             game->WinFirstBoss(font, window);
+                            Theme.play();
                             monster->SetMonster(100, 5,"Infra-Knight", "Infra-Knight, le frère\nmaléfique de Meca-Doom\nveut protéger son\nfrère machiavélique !!!\n\nPoint faible :\nIl reste humain à\nl'interieur...", 5, .3);
                             monsterImg = "2ndBOSS.png";
                             nameX = 750.f;
@@ -292,23 +339,40 @@ void Game(RenderWindow& window, Font font) {
                             bossSY = 1;
                         }
                         else if (nbMonsterDeafeated == 2) {
+                            theme = "Sasageyo.ogg";
+                            Theme.setLoop(0);
+                            Theme.stop();
+                            if (!Theme.openFromFile(theme)) {
+                                cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                            }
                             game->WinSecondBoss(font, window);
+                            Theme.play();
                             monster->SetMonster(2, 5 ,"Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
                             monsterImg = "3rdBOSS.png";
                             bossX = 500;
                             bossY = 200;
                         }
                         else if (nbMonsterDeafeated == 3) {
+                            theme = "Metal-Gear-Solid.ogg";
+                            Theme.setLoop(0);
+                            Theme.stop();
+                            if (!Theme.openFromFile(theme)) {
+                                cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                            }
                             game->WinThirdBoss(font, window);
+                            Theme.play();
                             monster->SetMonster(2, 5 ,"Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
                             monsterImg = "4thBOSS.png";
                             nameX = 650.f;
-                            bossX = 450;
-                            bossY = 340;
-                            bossSX = 2;
-                            bossSY = 2;
+                            bossX = 700;
+                            bossY = 440;
+                            bossSX = 1;
+                            bossSY = 1;
                         }
                         else if (nbMonsterDeafeated == 4) {
+                            Theme.setLoop(0);
+                            Theme.stop();
+                            sheesh.play();
                             game->Ending(font, window);
                             //free();
                             window.close();
@@ -345,7 +409,7 @@ void Game(RenderWindow& window, Font font) {
                             btnAmeliorationSpellR.Draw(window);
                             btnAmeliorationArme.Draw(window);
 
-                            GUI->InitHUD(window, nameX); // Lancement de la fonction qui va se charger d'afficher tout le menu dans le jeu                           
+                            GUI->InitHUD(window, nameX, spellA->getlvl(), spellZ->getlvl(), spellE->getlvl(), spellR->getlvl()); // Lancement de la fonction qui va se charger d'afficher tout le menu dans le jeu                           
 
                             Sprite MonsterBoss = monster->CreateSprite(window, font, monsterImg, bossX, bossY, bossSX, bossSY, bossSprite);
 
@@ -380,7 +444,14 @@ void Game(RenderWindow& window, Font font) {
                                 {
                                     nbMonsterDeafeated++;
                                     if (nbMonsterDeafeated == 1) {
+                                        theme = "DBZ_Vegeta.ogg";
+                                        Theme.setLoop(0);
+                                        Theme.stop();
+                                        if (!Theme.openFromFile(theme)) {
+                                            cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                                        }
                                         game->WinFirstBoss(font, window);
+                                        Theme.play();
                                         monster->SetMonster(2, 250,"Infra-Knight", "Infra-Knight, le frère\nmaléfique de Meca-Doom\nveut protéger son\nfrère machiavélique !!!\n\nPoint faible :\nIl reste humain à\nl'interieur...", 5, .3);
                                         monsterImg = "2ndBOSS.png";
                                         nameX = 750.f;
@@ -390,23 +461,40 @@ void Game(RenderWindow& window, Font font) {
                                         bossSY = 1;
                                     }
                                     else if (nbMonsterDeafeated == 2) {
+                                        theme = "Sasageyo.ogg";
+                                        Theme.setLoop(0);
+                                        Theme.stop();
+                                        if (!Theme.openFromFile(theme)) {
+                                            cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                                        }
                                         game->WinSecondBoss(font, window);
+                                        Theme.play();
                                         monster->SetMonster(2, 250,"Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
                                         monsterImg = "3rdBOSS.png";
                                         bossX = 500;
                                         bossY = 200;
                                     }
                                     else if (nbMonsterDeafeated == 3) {
+                                        theme = "Metal-Gear-Solid.ogg";
+                                        Theme.setLoop(0);
+                                        Theme.stop();                     
+                                        if (!Theme.openFromFile(theme)) {
+                                            cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                                        }
                                         game->WinThirdBoss(font, window);
+                                        Theme.play();
                                         monster->SetMonster(2, 250,"Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
                                         monsterImg = "4thBOSS.png";
                                         nameX = 650.f;
-                                        bossX = 450;
-                                        bossY = 340;
-                                        bossSX = 2;
-                                        bossSY = 2;
+                                        bossX = 700;
+                                        bossY = 440;
+                                        bossSX = 1;
+                                        bossSY = 1;
                                     }
                                     else if (nbMonsterDeafeated == 4) {
+                                        Theme.setLoop(0);
+                                        Theme.stop();
+                                        sheesh.play();
                                         game->Ending(font, window);
                                         //free();
                                         window.close();
@@ -445,7 +533,7 @@ void Game(RenderWindow& window, Font font) {
                             btnAmeliorationSpellR.Draw(window);
                             btnAmeliorationArme.Draw(window);
 
-                            GUI->InitHUD(window, nameX);
+                            GUI->InitHUD(window, nameX, spellA->getlvl(), spellZ->getlvl(), spellE->getlvl(), spellR->getlvl());
                             // Lancement de la fonction qui va se charger d'afficher tout le menu dans le jeu
 
                             Sprite MonsterBoss = monster->CreateSprite(window, font, monsterImg, bossX, bossY, bossSX, bossSY, bossSprite);
@@ -465,7 +553,14 @@ void Game(RenderWindow& window, Font font) {
                                     {
                                         nbMonsterDeafeated++;
                                         if (nbMonsterDeafeated == 1) {
+                                            theme = "DBZ_Vegeta.ogg";
+                                            Theme.setLoop(0);
+                                            Theme.stop();
+                                            if (!Theme.openFromFile(theme)) {
+                                                cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                                            }
                                             game->WinFirstBoss(font, window);
+                                            Theme.play();
                                             monster->SetMonster(2, 250,"Infra-Knight", "Infra-Knight, le frère\nmaléfique de Meca-Doom\nveut protéger son\nfrère machiavélique !!!\n\nPoint faible :\nIl reste humain à\nl'interieur...", 5, .3);
                                             monsterImg = "2ndBOSS.png";
                                             nameX = 750.f;
@@ -475,23 +570,40 @@ void Game(RenderWindow& window, Font font) {
                                             bossSY = 1;
                                         }
                                         else if (nbMonsterDeafeated == 2) {
+                                            theme = "Sasageyo.ogg";
+                                            Theme.setLoop(0);
+                                            Theme.stop();
+                                            if (!Theme.openFromFile(theme)) {
+                                                cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                                            }
                                             game->WinSecondBoss(font, window);
+                                            Theme.play();
                                             monster->SetMonster(2,250 ,"Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
                                             monsterImg = "3rdBOSS.png";
                                             bossX = 500;
                                             bossY = 200;
                                         }
                                         else if (nbMonsterDeafeated == 3) {
+                                            theme = "Metal-Gear-Solid.ogg";
+                                            Theme.setLoop(0);
+                                            Theme.stop();
+                                            if (!Theme.openFromFile(theme)) {
+                                                cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+                                            }
                                             game->WinThirdBoss(font, window);
+                                            Theme.play();
                                             monster->SetMonster(2, 250,"Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
                                             monsterImg = "4thBOSS.png";
                                             nameX = 650.f;
-                                            bossX = 450;
-                                            bossY = 340;
-                                            bossSX = 2;
-                                            bossSY = 2;
+                                            bossX = 700;
+                                            bossY = 440;
+                                            bossSX = 1;
+                                            bossSY = 1;
                                         }
                                         else if (nbMonsterDeafeated == 4) {
+                                            Theme.setLoop(0);
+                                            Theme.stop();
+                                            sheesh.play();
                                             game->Ending(font, window);
                                             //free();
                                             window.close();
@@ -566,7 +678,7 @@ void Game(RenderWindow& window, Font font) {
                             btnAmeliorationSpellA.setText("SunFire[4]");
                         }
                         if (spellA->cost == 300) {
-                            btnAmeliorationSpellA.setText("SunFire[5]");
+                            btnAmeliorationSpellA.setText("SunFire[Max]");
                         }
                     }
                     else {
@@ -595,7 +707,7 @@ void Game(RenderWindow& window, Font font) {
                             btnAmeliorationSpellZ.setText("   Heal[4]");
                         }
                         if (spellZ->cost == 175) {
-                            btnAmeliorationSpellZ.setText("   Heal[5]");
+                            btnAmeliorationSpellZ.setText("   Heal[Max]");
                         }
                     }
                     else {
@@ -624,7 +736,7 @@ void Game(RenderWindow& window, Font font) {
                             btnAmeliorationSpellE.setText("FullCrit[4]");
                         }
                         if (spellE->cost == 600) {
-                            btnAmeliorationSpellE.setText("FullCrit[5]");
+                            btnAmeliorationSpellE.setText("FullCrit[Max]");
                         }
                     }
                     else {
@@ -641,7 +753,7 @@ void Game(RenderWindow& window, Font font) {
                         spellR->cost += 100;
                         if (spellR->cost == 1100) {
 
-                            btnAmeliorationSpellR.setText("Ultimate[1]");
+                            btnAmeliorationSpellR.setText("Ultimate[Max]");
                         }
 
                     }
@@ -673,7 +785,7 @@ void Game(RenderWindow& window, Font font) {
                             btnAmeliorationArme.setTextColor(Color::Black);
                         }
                         if (weapon->cost == 525) {
-                            btnAmeliorationArme.setText("Arme lvl : Diamond / Click lvlUp++");
+                            btnAmeliorationArme.setText("Arme lvl : Diamond / Lvl Max");
                             color = (Color(0, 205, 255));
                         }
                     }
@@ -700,6 +812,15 @@ void Menu(RenderWindow& window) {
     }
 
     sprite_MainMenu.setTexture(MainMenu);
+
+    Music Menu;
+    if (!Menu.openFromFile("He-walk.ogg")) {
+        cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+    }
+    Menu.setVolume(1);
+    Menu.play();
+    Menu.setLoop(1);
+
     Font arial;
     arial.loadFromFile("arial.ttf");
 
@@ -768,11 +889,15 @@ void Menu(RenderWindow& window) {
                 {
                     btnStart.setBackColor(Color(200, 200, 200));
                     window.clear();
+                    Menu.setLoop(0);
+                    Menu.stop();
                     i++;
                 }
                 if (btnQuit.isMouseHover(window))
                 {
                     btnQuit.setBackColor(Color(200, 200, 200));
+                    Menu.setLoop(0);
+                    Menu.stop();
                     window.close();
                 }
                 if (btnTuto.isMouseHover(window))
@@ -791,7 +916,7 @@ void Menu(RenderWindow& window) {
 
 int main()
 {
-    RenderWindow window(VideoMode(1920, 1080), "Infradventure");
+    RenderWindow window(VideoMode(1920, 1080), "Infradventure", Style::Fullscreen);
     Font font;
     font.loadFromFile("arial.ttf");
 
@@ -799,15 +924,7 @@ int main()
     if (!Icon.loadFromFile("Icon.png")) {
         cout << "Could not load Icon..." << endl;
     }
-
     window.setIcon(100, 100, Icon.getPixelsPtr());
-
-
-
-
     Menu(window);
     Game(window,font);
-
-    
-
     }
