@@ -293,14 +293,14 @@ void Game(RenderWindow& window, Font font) {
                         }
                         else if (nbMonsterDeafeated == 2) {
                             game->WinSecondBoss(font, window);
-                            monster->SetMonster(100, 5 ,"Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
+                            monster->SetMonster(2, 5 ,"Infra-Doom", "Ce robot venant du futur\nest venu détruire le monde !!!\nSeul nous peuvent\nauver l'humanité !!!\n\nPoint faible :\nTROP FORT !!!", 10, .4);
                             monsterImg = "3rdBOSS.png";
                             bossX = 500;
                             bossY = 200;
                         }
                         else if (nbMonsterDeafeated == 3) {
                             game->WinThirdBoss(font, window);
-                            monster->SetMonster(100, 5 ,"Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
+                            monster->SetMonster(2, 5 ,"Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
                             monsterImg = "4thBOSS.png";
                             nameX = 650.f;
                             bossX = 450;
