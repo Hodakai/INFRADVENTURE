@@ -24,6 +24,7 @@ void Tuto(RenderWindow& window) {
     btnQuit2.setFont(arial);
     
 
+
     int i = 0;
     while (i != 1) {
         
@@ -69,9 +70,9 @@ void Game(RenderWindow& window, Font font) {
         cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
     }
     Theme.setVolume(1);
-   
+
     SoundBuffer Sheesh;
-    if (!Sheesh.loadFromFile("Hitmarker.ogg")) {
+    if (!Sheesh.loadFromFile("Sheesh.ogg")) {
         cout << "Could not load Punch sound..." << endl; //Open le fichier du son d'attaque pour le mettre dans le buffer
     }
 
@@ -291,7 +292,7 @@ void Game(RenderWindow& window, Font font) {
                         game->WinThirdBoss(font, window);
                         Theme.play();
 
-                        monster->SetMonster(2, 250, "Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
+                        monster->SetMonster(2, 250 , "Ship of Infra-Doom", "Meca-Doom s'enfuit !!!\nIl est parti a bord de son\nvaisseau armageddon !\nIl faut le mettre hors d'état\nde nuire !!!\n\nPoint faible :\nVOUS !!!", 15, .5);
                         monsterImg = "4thBOSS.png";                       
                         nameX = 650.f;
                         bossX = 700;
@@ -304,7 +305,15 @@ void Game(RenderWindow& window, Font font) {
                         Theme.stop();
                         sheesh.play();
                         game->Ending(font, window);
-                        //free();
+                        delete weapon;
+                        delete monster;
+                        delete player;
+                        delete spellA; 
+                        delete spellZ;
+                        delete spellE;
+                        delete spellR;
+                        delete GUI;
+                        delete game;
                         window.close();
                     }
                 }
@@ -374,7 +383,15 @@ void Game(RenderWindow& window, Font font) {
                             Theme.stop();
                             sheesh.play();
                             game->Ending(font, window);
-                            //free();
+                            delete weapon;
+                            delete monster;
+                            delete player;
+                            delete spellA;
+                            delete spellZ;
+                            delete spellE;
+                            delete spellR;
+                            delete GUI;
+                            delete game;
                             window.close();
                         }
                     }
@@ -496,7 +513,15 @@ void Game(RenderWindow& window, Font font) {
                                         Theme.stop();
                                         sheesh.play();
                                         game->Ending(font, window);
-                                        //free();
+                                        delete weapon;
+                                        delete monster;
+                                        delete player;
+                                        delete spellA;
+                                        delete spellZ;
+                                        delete spellE;
+                                        delete spellR;
+                                        delete GUI;
+                                        delete game;
                                         window.close();
                                     }
                                 }
@@ -605,7 +630,15 @@ void Game(RenderWindow& window, Font font) {
                                             Theme.stop();
                                             sheesh.play();
                                             game->Ending(font, window);
-                                            //free();
+                                            delete weapon;
+                                            delete monster;
+                                            delete player;
+                                            delete spellA;
+                                            delete spellZ;
+                                            delete spellE;
+                                            delete spellR;
+                                            delete GUI;
+                                            delete game;
                                             window.close();
                                         }
                                     }

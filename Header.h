@@ -152,21 +152,21 @@ void GameEvents::GameOver(Font font, RenderWindow& window) {
 
 	window.clear();
 
-	Display Loose;
-	string PLoose = "Vous avez perdu !!!";
-	Loose.Print(font, 50, window, PLoose, 700, 500, Color::White);
 
+	SoundBuffer Sheesh;
+	if (!Sheesh.loadFromFile("Sheesh.ogg")) {
+		cout << "Could not load Punch sound..." << endl; //Open le fichier du son d'attaque pour le mettre dans le buffer
+	}
+
+	Sound sheesh;
+	sheesh.setBuffer(Sheesh); //On utillise le son que l'on a mis dans le buffer pour l'attribuer à un élément de type sound pour pouvoir l'utiliser après
+	sheesh.setVolume(5);
+
+	Sprite loose;
+	Display Looser;
+	Looser.CreateSprite(window, font, "Loose.png", loose, 1, 1);
 	window.display();
-
-	Sleep(2000);
-
-	window.clear();
-
-	Display End;
-	string PEnd = "Merci d'avoir joué !!!";
-	End.Print(font, 20, window, PEnd, 700, 500, Color::White);
-
-	window.display();
+	sheesh.play();
 
 	Sleep(5000);
 
@@ -176,6 +176,15 @@ void GameEvents::GameOver(Font font, RenderWindow& window) {
 
 void GameEvents::Intro(Font font, RenderWindow& window) {
 	window.clear();
+
+	Music preload;
+	string load = "Preload.ogg";
+	if (!preload.openFromFile(load)) {
+		cout << "Could not load music theme..." << endl; //Open le fichier du theme principal
+	}
+	preload.setVolume(1);
+	preload.play();
+
 
 	Sprite Intro1;
 	Display dispIntro1;
@@ -198,7 +207,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 	dispIntro3.CreateSprite(window, font, "Intro3.png", Intro3, 1, 1);
 	window.display();
 
-	Sleep(2000);
+	Sleep(3000);
 	window.clear();
 
 	Sprite Intro4;
@@ -215,6 +224,7 @@ void GameEvents::Intro(Font font, RenderWindow& window) {
 	window.display();
 
 	Sleep(2000);
+	preload.stop();
 }
 
 
